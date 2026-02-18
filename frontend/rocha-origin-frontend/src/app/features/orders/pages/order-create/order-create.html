@@ -1,0 +1,37 @@
+<h1>Criar encomenda</h1>
+
+<form [formGroup]="form">
+    <div>
+        <label>Cliente ID</label>
+        <input type="text" formControlName="clientId" />
+    </div>
+
+    <div>
+        <label>Data de preparação</label>
+        <input type="date" formControlName="prepDate" />
+    </div>
+
+    <div>
+        <label>Data de entrega</label>
+        <input type="date" formControlName="deliveryDate" />
+    </div>
+
+    <div>
+        <label>Hora limite</label>
+        <input type="time" formControlName="deliveryDeadlineTime" />
+    </div>
+
+    <div>
+        <label>
+            <input type="checkbox" formControlName="isUrgent" />
+            Urgente
+        </label>
+    </div>
+
+    <button type="button" (click)="submit()" [disabled]="form.invalid">
+        Criar Encomenda
+    </button>
+
+</form>
+
+<p>Form válido: {{ form.valid }}</p>
