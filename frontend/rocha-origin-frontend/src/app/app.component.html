@@ -1,0 +1,103 @@
+<mat-sidenav-container class="rocha-layout">
+
+  <mat-sidenav mode="side" opened [class.collapsed]="isCollapsed">
+
+    <div class="brand">
+      <ng-container *ngIf="!isCollapsed; else collapsedBrand">
+        <img class="brand-logo" src="assets/logo-rocha.svg" alt="Rocha Talho e Mercado" />
+      </ng-container>
+
+      <ng-template #collapsedBrand>
+        <img class="brand-logo-icon" src="assets/logo-rocha-icon.svg" alt="Rocha Talho e Mercado" />
+      </ng-template>
+
+      <div class="divider"></div>
+    </div>
+
+    <mat-nav-list class="wrapper-nav">
+
+      <a mat-list-item routerLink="/dashboard" routerLinkActive="nav-active"
+        [routerLinkActiveOptions]="{ exact: true }">
+        <mat-icon svgIcon="icon-dashboard"></mat-icon>
+        <span class="label" *ngIf="!isCollapsed">Dashboard</span>
+      </a>
+
+      <a mat-list-item routerLink="/nova-encomenda" routerLinkActive="nav-active"
+        [routerLinkActiveOptions]="{ exact: true }">
+        <mat-icon svgIcon="icon-add-order"></mat-icon>
+        <span class="label" *ngIf="!isCollapsed">Nova Encomenda</span>
+      </a>
+
+      <a mat-list-item routerLink="/encomendas" routerLinkActive="nav-active"
+        [routerLinkActiveOptions]="{ exact: true }">
+        <mat-icon svgIcon="icon-orders"></mat-icon>
+        <span class="label" *ngIf="!isCollapsed">Encomendas</span>
+      </a>
+
+      <div class="section-divider"></div>
+
+
+
+      <div class="menu-section">
+
+        <div class="menu-section-header" (click)="toggleManagement()">
+          <mat-icon svgIcon="icon-setting"></mat-icon>
+          <span class="label" *ngIf="!isCollapsed">Gestão</span>
+
+          <span class="spacer"></span>
+
+          <mat-icon *ngIf="!isCollapsed">
+            {{ isManagementOpen ? 'expand_less' : 'expand_more' }}
+          </mat-icon>
+        </div>
+
+        <div class="flex-row">
+          <img class="menu-tree" src="assets/menu-tree.svg" alt="Menu Tree" *ngIf="!isCollapsed" />
+
+          <div class="submenu" *ngIf="isManagementOpen && !isCollapsed">
+
+            <a mat-list-item routerLink="/clientes" routerLinkActive="nav-active" class="subitem">
+              <mat-icon svgIcon="icon-clients"></mat-icon>
+              <span class="label">Clientes</span>
+            </a>
+
+            <a mat-list-item routerLink="/produtos" routerLinkActive="nav-active" class="subitem">
+              <mat-icon svgIcon="icon-meat"></mat-icon>
+              <span class="label">Produtos</span>
+            </a>
+
+            <a mat-list-item routerLink="/animais" routerLinkActive="nav-active" class="subitem">
+              <mat-icon svgIcon="icon-cow"></mat-icon>
+              <span class="label">Animais</span>
+            </a>
+
+            <a mat-list-item routerLink="/configuracoes" routerLinkActive="nav-active" class="subitem">
+              <mat-icon svgIcon="icon-setting"></mat-icon>
+              <span class="label">Configurações</span>
+            </a>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- TODO: adicionar "My Account" no fundo, quando criares a rota -->
+
+    </mat-nav-list>
+
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+
+    <mat-toolbar color="primary">
+      <button mat-icon-button (click)="toggleSidebar()">
+        <mat-icon>{{ isCollapsed ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+      </button>
+      <span></span>
+    </mat-toolbar>
+
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

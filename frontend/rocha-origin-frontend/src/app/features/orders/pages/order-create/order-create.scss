@@ -1,0 +1,26 @@
+.page-title {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+    margin-bottom: 8px;
+}
+
+mat-card {
+    max-width: 720px;
+}
+
+mat-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}

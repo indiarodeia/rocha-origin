@@ -1,1 +1,178 @@
+@use "@angular/material" as mat;
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$rose-palette,
+        tertiary: mat.$red-palette
+      ),
+      typography: (
+        brand-family: "Figtree",
+        plain-family: "Figtree"
+      ),
+
+      density: 0
+    )
+  );
+}
+
+body {
+  //change to dark for dark mode
+  color-scheme: light;
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font-family: "Figtree", sans-serif;
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+  height: 100%;
+}
 /* You can add global styles to this file, and also import other style files */
+
+/* ==========================================================================
+   =========================================================================
+         MENU COMPONENT - Rocha Layout
+   ==========================================================================
+   ========================================================================== */
+
+.rocha-layout {
+  height: 100vh;
+}
+
+/* Sidenav */
+.rocha-layout mat-sidenav {
+  width: 280px;
+  background: #2b2b2b;
+  color: rgba(255, 255, 255, 0.9);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  transition: width 180ms ease;
+}
+
+.rocha-layout mat-sidenav.collapsed {
+  width: 76px;
+}
+
+/* Content */
+.rocha-layout .content {
+  padding: 40px;
+}
+
+/* Brand */
+.rocha-layout .brand {
+  height: 110px;
+  padding: 18px 16px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.rocha-layout .brand-logo {
+  height: 64px;
+  width: 100%;
+  object-fit: contain;
+}
+
+.rocha-layout .brand-logo-icon {
+  height: 48px;
+  width: 48px;
+  object-fit: contain;
+}
+
+.rocha-layout .divider {
+  height: 1px;
+  width: 100%;
+  margin-top: 14px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.rocha-layout .section-divider {
+  height: 1px;
+  margin: 12px 16px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.rocha-layout .wrapper-nav {
+  width: 100%;
+}
+
+.rocha-layout .spacer {
+  flex: 1 1 auto;
+}
+
+/* ==========================================================================
+   Angular Material list item styling 
+   ========================================================================== */
+
+.rocha-layout .mat-mdc-nav-list .mat-mdc-list-item {
+  margin: 6px 10px;
+  border-radius: 12px;
+  width: auto;
+}
+
+.rocha-layout .mat-mdc-nav-list .mat-mdc-list-item .mat-icon {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.rocha-layout .mat-mdc-nav-list .mat-mdc-list-item .mdc-list-item__primary-text {
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rocha-layout .mat-mdc-nav-list a.mat-mdc-list-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.rocha-layout .mat-mdc-nav-list a.nav-active.mat-mdc-list-item {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.rocha-layout .label {
+  margin-left: 10px;
+}
+
+/* ==========================================================================
+   Gestão + submenu
+   ========================================================================== */
+
+.rocha-layout .menu-section-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-radius: 10px;
+  margin: 0 10px;
+}
+
+.rocha-layout .menu-section-header:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.rocha-layout .flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin-left: 34px;
+}
+
+.rocha-layout .menu-tree {
+  padding-top: 12px;
+}
+
+.rocha-layout .submenu a.nav-active {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 12px;
+}
+
+.rocha-layout .subitem {
+  margin-left: 0 !important;
+}

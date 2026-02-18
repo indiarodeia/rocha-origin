@@ -1,37 +1,39 @@
-<h1>Criar encomenda</h1>
-
-<form [formGroup]="form">
-    <div>
-        <label>Cliente ID</label>
-        <input type="text" formControlName="clientId" />
-    </div>
-
-    <div>
-        <label>Data de preparação</label>
-        <input type="date" formControlName="prepDate" />
-    </div>
-
-    <div>
-        <label>Data de entrega</label>
-        <input type="date" formControlName="deliveryDate" />
-    </div>
-
-    <div>
-        <label>Hora limite</label>
-        <input type="time" formControlName="deliveryDeadlineTime" />
-    </div>
-
-    <div>
-        <label>
-            <input type="checkbox" formControlName="isUrgent" />
-            Urgente
-        </label>
-    </div>
-
-    <button type="button" (click)="submit()" [disabled]="form.invalid">
+<mat-card>
+    <mat-card-title class="page-title">
         Criar Encomenda
-    </button>
+    </mat-card-title>
 
-</form>
+    <mat-card-content>
+        <form [formGroup]="form">
 
-<p>Form válido: {{ form.valid }}</p>
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Cliente ID</mat-label>
+                <input matInput formControlName="clientId">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Data de preparação</mat-label>
+                <input matInput type="date" formControlName="prepDate">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Data de entrega</mat-label>
+                <input matInput type="date" formControlName="deliveryDate">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Hora limite</mat-label>
+                <input matInput type="time" formControlName="deliveryDeadlineTime">
+            </mat-form-field>
+
+            <mat-checkbox formControlName="isUrgent">
+                Urgente
+            </mat-checkbox>
+
+            <button mat-raised-button color="primary" type="button" (click)="submit()" [disabled]="form.invalid">
+                Criar Encomenda
+            </button>
+
+        </form>
+    </mat-card-content>
+</mat-card>
