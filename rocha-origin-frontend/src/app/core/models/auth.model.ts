@@ -1,4 +1,4 @@
-export type UserRole = 'ADMIN' | 'VENDEDOR' | 'TALHO' | 'CLIENTE';
+import { UserRole } from './types.model';
 
 export interface User {
   id: string;
@@ -6,7 +6,10 @@ export interface User {
   email: string;
   role: UserRole;
   isActive: boolean;
+  clientId?: string;
+
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface AuthResponse {

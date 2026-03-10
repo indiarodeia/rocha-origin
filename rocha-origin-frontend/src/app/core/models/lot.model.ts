@@ -1,11 +1,16 @@
 export interface Lot {
   id: string;
-  lotCode: string; // e.g. 20260201
+
+  lotCode: string; // ex: 20260201
   year: number;
   month: number;
   weekOfMonth: number;
+
   startDate: string;
   endDate: string;
+
+  notes?: string;
+
   createdAt: string;
 }
 

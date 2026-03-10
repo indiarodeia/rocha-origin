@@ -50,16 +50,16 @@ export class OrderCreate {
 
     const value = this.form.value;
 
-    const newOrder = this.orderService.create({
+    /*     const newOrder = this.orderService.create({
       clientId: value.clientId,
       status: 'PENDING',
       prepDate: value.prepDate,
       deliveryDate: value.deliveryDate,
-      deliveryDeadlineTime: value.deliveryDeadlineTime,
+
       isUrgent: value.isUrgent,
       createdByUserId: 'user_1',
       items: [],
-    });
+    }); */
 
     this.ordersCount = this.orderService.getAll().length;
 
@@ -67,6 +67,6 @@ export class OrderCreate {
       isUrgent: false,
     });
 
-    console.log('Nova encomenda criada:', newOrder);
+    console.log('Nova encomenda criada:');
   }
 }

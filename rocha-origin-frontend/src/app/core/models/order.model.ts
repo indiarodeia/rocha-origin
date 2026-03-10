@@ -1,25 +1,32 @@
-import { OrderItem } from './order-item.model';
-
-export type OrderStatus = 'PENDING' | 'PREPARING' | 'IN_TRANSIT' | 'DELIVERED';
-
-export type UnitType = 'KG' | 'UN';
+import { OrderStatus } from './types.model';
 
 export interface Order {
   id: string;
 
   clientId: string;
-  establishmentId?: string;
+  establishmentId: string;
+
   quickClientName?: string;
+
   status: OrderStatus;
-  prepDate: string; // ISO date
-  deliveryDate: string; // ISO date
-  deliveryDeadlineTime: string; // HH:mm
-  isUrgent: boolean;
+
+  prepDate?: string;
+  deliveryDate?: string;
+  deliveryDateTime?: string;
+
+  isDelivery?: boolean;
+  isUrgent?: boolean;
+
   orderCategory?: string;
+
   routeId?: string;
+
+  paymentType?: 'IMMEDIATE' | 'CREDIT' | 'CUSTOMER';
+
   notes?: string;
-  createdByUserId: string;
+
+  createdByUserId?: string;
+
   createdAt: string;
-  updatedAt: string;
-  items: OrderItem[];
+  updatedAt?: string;
 }

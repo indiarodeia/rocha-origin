@@ -1,14 +1,20 @@
 export interface Supplier {
   id: string;
   name: string;
+
   vatNumber?: string;
-  explorationId?: string;
+  explorationCode?: string;
+
   addressStreet?: string;
   addressPostalCode?: string;
   addressCity?: string;
-  island?: string;
+
   phone?: string;
   email?: string;
-  profileJson?: any; // for extended Meat Azores content
+
+  certifications?: string;
+  profilePicture?: string;
+  profileJson?: string; // For future use in Meatazores
+
   createdAt: string;
 }

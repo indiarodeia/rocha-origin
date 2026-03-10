@@ -8,3 +8,4 @@ export * from './animal.model';
 export * from './lot.model';
 export * from './piece.model';
 export * from './supplier.model';
+export * from './product.model';

@@ -1,3 +1,5 @@
+import { PaymentType } from './types.model';
+
 export interface Client {
   id: string;
   companyName: string;
@@ -5,11 +7,13 @@ export interface Client {
   phone: string;
   email?: string;
 
-  // Billing address
   billingStreet?: string;
   billingDoorNumber?: string;
   billingPostalCode?: string;
   billingCity?: string;
+  billingCountry?: string;
+
+  defaultPaymentType?: PaymentType;
 
   notes?: string;
 

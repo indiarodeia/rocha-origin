@@ -1,33 +1,42 @@
-import { UnitType } from './order.model';
-
-export type TraceabilitySourceType = 'ANIMAL' | 'LOT' | 'NONE';
+import { UnitType } from './types.model';
+import { TraceabilitySourceType } from './types.model';
+import { OrderStatus } from './types.model';
 
 export interface OrderItem {
   id: string;
+
   orderId: string;
 
   productId?: string;
   productName: string;
 
-  // Requested (what client ordered)
+  establishmentMenuItemId?: string;
+
   requestedQuantity: number;
   requestedUnit: UnitType;
+
   approxKgPerUnit?: number;
+
   requestNotes?: string;
 
-  unitPrice: number;
-  priceUnit: UnitType;
+  unitPrice?: number;
+  priceUnit?: UnitType;
 
-  // Prepared (filled by butchery)
   preparedQuantity?: number;
   preparedUnit?: UnitType;
   preparedWeightKg?: number;
 
   traceabilitySourceType?: TraceabilitySourceType;
+
   animalId?: string;
   lotId?: string;
 
+  status: OrderStatus;
+
+  note?: string;
+
   preparedAt?: string;
   preparedByUserId?: string;
+
   prepNotes?: string;
 }
