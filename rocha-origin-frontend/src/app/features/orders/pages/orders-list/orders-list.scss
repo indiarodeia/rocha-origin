@@ -1,0 +1,62 @@
+:host {
+  display: block;
+}
+
+.products-cell {
+  max-width: 360px;
+  white-space: normal;
+  line-height: 1.35;
+}
+
+.status-pill {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.status-pending {
+  background: #fff6cc;
+  color: #8a6d00;
+}
+
+.status-preparing {
+  background: #dff1ff;
+  color: #005a9c;
+}
+
+.status-ready {
+  background: #dff6e7;
+  color: #11662e;
+}
+
+.status-delivered {
+  background: #ececec;
+  color: #3b3b3b;
+}
+
+.flags-cell {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.flag {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 11px;
+  background: #f2f2f2;
+  color: #333;
+}
+
+.flag-delivery {
+  background: #e5f2ff;
+  color: #184f86;
+}
+
+.flag-urgent {
+  background: #ffe7e7;
+  color: #8f1919;
+}

@@ -1,0 +1,18 @@
+:host {
+  display: block;
+}
+
+.status-pill {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #f3f3f3;
+  color: #444;
+}
+
+.status-active {
+  background: #dff6e7;
+  color: #11662e;
+}

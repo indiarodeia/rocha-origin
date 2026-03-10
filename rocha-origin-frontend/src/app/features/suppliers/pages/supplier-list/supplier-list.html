@@ -1,0 +1,38 @@
+<app-list-page
+  title="Fornecedores"
+  addLabel="Novo fornecedor"
+  [dataSource]="dataSource"
+  [displayedColumns]="displayedColumns"
+  [pageSize]="10"
+  (add)="onAddSupplier()"
+>
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef>ID</th>
+    <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Nome</th>
+    <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="explorationCode">
+    <th mat-header-cell *matHeaderCellDef>Codigo Exploracao</th>
+    <td mat-cell *matCellDef="let row">{{ row.explorationCode }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="city">
+    <th mat-header-cell *matHeaderCellDef>Cidade</th>
+    <td mat-cell *matCellDef="let row">{{ row.city }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="phone">
+    <th mat-header-cell *matHeaderCellDef>Telefone</th>
+    <td mat-cell *matCellDef="let row">{{ row.phone }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="certifications">
+    <th mat-header-cell *matHeaderCellDef>Certificacoes</th>
+    <td mat-cell *matCellDef="let row" class="certifications-cell">{{ row.certifications }}</td>
+  </ng-container>
+</app-list-page>

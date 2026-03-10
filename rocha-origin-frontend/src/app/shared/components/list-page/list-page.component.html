@@ -1,0 +1,31 @@
+<div class="page">
+
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+
+        <button mat-raised-button color="primary" *ngIf="addLabel" (click)="add.emit()">
+            {{ addLabel }}
+        </button>
+    </div>
+
+    <div class="filters">
+        <ng-content select="[filters]"></ng-content>
+    </div>
+
+    <div class="table">
+
+        <table mat-table [dataSource]="dataSource">
+
+            <ng-content></ng-content>
+
+            <tr mat-header-row *matHeaderRowDef="renderedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: renderedColumns"></tr>
+
+        </table>
+
+    </div>
+
+    <mat-paginator *ngIf="showPaginator" [pageSize]="pageSize">
+    </mat-paginator>
+
+</div>

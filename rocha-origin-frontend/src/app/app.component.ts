@@ -54,6 +54,7 @@ export class App {
       'icon-dashboard',
       'icon-orders',
       'icon-clients',
+      'icon-suppliers',
       'icon-cow',
       'icon-meat',
       'icon-setting',

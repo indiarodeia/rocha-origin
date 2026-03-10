@@ -1,0 +1,20 @@
+.page {
+    padding: 24px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.filters {
+    margin-bottom: 16px;
+}
+
+.table {
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+}

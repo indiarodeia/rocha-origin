@@ -1,0 +1,18 @@
+:host {
+  display: block;
+}
+
+.species-pill {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #e5f2ff;
+  color: #184f86;
+}
+
+.species-ovino {
+  background: #f0e8ff;
+  color: #5a2f91;
+}

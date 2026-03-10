@@ -32,6 +32,15 @@ export const routes: Routes = [
   },
 
   {
+    path: 'fornecedores',
+    loadComponent: () =>
+      import('./features/suppliers/pages/supplier-list/supplier-list').then(
+        (m) => m.SupplierList,
+      ),
+    title: 'Fornecedores | Rocha Origin',
+  },
+
+  {
     path: 'produtos',
     loadComponent: () =>
       import('./features/products/pages/product-list/product-list').then((m) => m.ProductList),
