@@ -1,3 +1,4 @@
+import { OrderItem } from './order-item.model';
 import { OrderStatus } from './types.model';
 
 export interface Order {
@@ -29,4 +30,6 @@ export interface Order {
 
   createdAt: string;
   updatedAt?: string;
+
+  orderItems?: OrderItem[];
 }

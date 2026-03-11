@@ -1,3 +1,4 @@
+import { Establishment } from './establishment.model';
 import { PaymentType } from './types.model';
 
 export interface Client {
@@ -19,4 +20,6 @@ export interface Client {
 
   createdAt: string;
   updatedAt: string;
+
+  establishments?: Establishment[];
 }

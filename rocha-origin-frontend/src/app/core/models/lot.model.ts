@@ -1,3 +1,5 @@
+import { Animal } from './animal.model';
+
 export interface Lot {
   id: string;
 
@@ -12,6 +14,8 @@ export interface Lot {
   notes?: string;
 
   createdAt: string;
+
+  animals?: Animal[];
 }
 
 export interface LotAnimal {

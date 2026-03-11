@@ -1,38 +1,81 @@
 @use "@angular/material" as mat;
 
+:root {
+  --app-bg: #f8fafc;
+  --app-text: #0f172a;
+
+  --sidebar-bg: #1e293b;
+  --sidebar-text: rgba(255, 255, 255, 0.9);
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-hover: rgba(255, 255, 255, 0.06);
+  --sidebar-active: rgba(255, 255, 255, 0.18);
+  --sidebar-muted-icon: rgba(255, 255, 255, 0.75);
+  --sidebar-muted-text: rgba(255, 255, 255, 0.88);
+  --sidebar-divider: rgba(255, 255, 255, 0.12);
+
+  --primary-btn-bg: #6282ee;
+  --primary-btn-bg-hover: #2e5ad2;
+  --primary-btn-text: #ffffff;
+  --primary-btn-shadow: 0 6px 16px rgba(66, 98, 204, 0.25);
+
+  --lp-bg-start: #f7f9ff;
+  --lp-bg-end: #eef3ff;
+  --lp-card: #ffffff;
+  --lp-border: #dbe4ff;
+  --lp-head-bg: #334155;
+  --lp-head-text: #f6f8ff;
+  --lp-row-hover: #f4f7ff;
+  --lp-text: #1f2937;
+  --lp-muted: #64748b;
+  --lp-shadow: 0 14px 32px -24px rgba(22, 43, 86, 0.55);
+
+  --filter-bg: #f8fafc;
+
+  /* Global input tokens */
+  --field-border: #d8e0ef;
+  --field-border-hover: #c7d2e7;
+  --field-border-focus: #b6c4df;
+
+  --menu-bg: #f6f8fc;
+  --menu-hover: #ebf1fa;
+  --menu-selected: #e1eaf8;
+  --menu-text: #334155;
+}
+
 html {
   height: 100%;
   @include mat.theme(
     (
       color: (
-        primary: mat.$rose-palette,
-        tertiary: mat.$red-palette
+        primary: mat.$violet-palette,
+        tertiary: mat.$blue-palette
       ),
       typography: (
         brand-family: "Figtree",
         plain-family: "Figtree"
       ),
 
-      density: 0
+      density: -2
     )
   );
 }
 
 body {
-  //change to dark for dark mode
   color-scheme: light;
   // Set a default background, font and text colors for the application using
   // Angular Material's system-level CSS variables. Learn more about these
   // variables at https://material.angular.dev/guide/system-variables
   background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
+  color: var(--app-text);
   font-family: "Figtree", sans-serif;
   font: var(--mat-sys-body-medium);
 
   // Reset the user agent margin.
   margin: 0;
   height: 100%;
+  background: var(--app-bg);
 }
+
 /* You can add global styles to this file, and also import other style files */
 
 /* ==========================================================================
@@ -48,9 +91,9 @@ body {
 /* Sidenav */
 .rocha-layout mat-sidenav {
   width: 280px;
-  background: #2b2b2b;
-  color: rgba(255, 255, 255, 0.9);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  border-right: 1px solid var(--sidebar-border);
   transition: width 180ms ease;
 }
 
@@ -58,15 +101,30 @@ body {
   width: 76px;
 }
 
+.rocha-layout .sidebar-toggle-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 10px 0;
+}
+
+.rocha-layout .sidebar-toggle-row .mat-mdc-icon-button {
+  color: var(--sidebar-text);
+}
+
+.rocha-layout mat-sidenav.collapsed .sidebar-toggle-row {
+  justify-content: center;
+  padding: 8px 0 0;
+}
+
 /* Content */
 .rocha-layout .content {
-  padding: 40px;
+  padding: 20px;
 }
 
 /* Brand */
 .rocha-layout .brand {
   height: 110px;
-  padding: 18px 16px 8px;
+  padding: 0px 16px 0px 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -88,14 +146,14 @@ body {
 .rocha-layout .divider {
   height: 1px;
   width: 100%;
-  margin-top: 14px;
-  background: rgba(255, 255, 255, 0.12);
+  margin-top: 26px;
+  background: var(--sidebar-divider);
 }
 
 .rocha-layout .section-divider {
   height: 1px;
   margin: 12px 16px;
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--sidebar-divider);
 }
 
 .rocha-layout .wrapper-nav {
@@ -117,11 +175,11 @@ body {
 }
 
 .rocha-layout .mat-mdc-nav-list .mat-mdc-list-item .mat-icon {
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--sidebar-muted-icon);
 }
 
 .rocha-layout .mat-mdc-nav-list .mat-mdc-list-item .mdc-list-item__primary-text {
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--sidebar-muted-text);
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -129,11 +187,11 @@ body {
 }
 
 .rocha-layout .mat-mdc-nav-list a.mat-mdc-list-item:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--sidebar-hover);
 }
 
 .rocha-layout .mat-mdc-nav-list a.nav-active.mat-mdc-list-item {
-  background: rgba(255, 255, 255, 0.18);
+  background: var(--sidebar-active);
 }
 
 .rocha-layout .label {
@@ -154,7 +212,7 @@ body {
 }
 
 .rocha-layout .menu-section-header:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--sidebar-hover);
 }
 
 .rocha-layout .flex-row {
@@ -169,10 +227,161 @@ body {
 }
 
 .rocha-layout .submenu a.nav-active {
-  background: rgba(255, 255, 255, 0.16);
+  background: var(--sidebar-active);
   border-radius: 12px;
 }
 
 .rocha-layout .subitem {
   margin-left: 0 !important;
+}
+
+/* ==========================================================================
+  Inputs
+========================================================================== 
+
+
+/* Global Material input styling */
+
+.mat-mdc-form-field .mdc-notched-outline__leading,
+.mat-mdc-form-field .mdc-notched-outline__notch,
+.mat-mdc-form-field .mdc-notched-outline__trailing {
+  border-color: var(--field-border) !important;
+}
+
+.mat-mdc-form-field:hover .mdc-notched-outline__leading,
+.mat-mdc-form-field:hover .mdc-notched-outline__notch,
+.mat-mdc-form-field:hover .mdc-notched-outline__trailing {
+  border-color: var(--field-border-hover) !important;
+}
+
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: var(--field-border-focus) !important;
+}
+
+/* Global Material menu styling (same visual language as filters) */
+
+.mat-mdc-menu-panel {
+  background: var(--menu-bg) !important;
+  border: 1px solid var(--field-border);
+  border-radius: 10px !important;
+}
+
+.mat-mdc-menu-panel .mat-mdc-menu-item {
+  color: var(--menu-text) !important;
+  font-size: 14px;
+}
+
+.mat-mdc-menu-panel .mat-mdc-menu-item:hover:not([disabled]) {
+  background: var(--menu-hover) !important;
+}
+
+.mat-mdc-menu-panel .mat-mdc-menu-item.cdk-focused,
+.mat-mdc-menu-panel .mat-mdc-menu-item.cdk-program-focused {
+  background: var(--menu-selected) !important;
+}
+
+/* Global select dropdown style for order-create flow */
+
+.app-dropdown-panel {
+  background: var(--menu-bg) !important;
+  border: 1px solid var(--field-border);
+  border-radius: 10px !important;
+}
+
+.app-dropdown-panel .mat-mdc-option {
+  color: var(--menu-text) !important;
+  font-size: 12px;
+}
+
+.app-dropdown-panel .mat-mdc-option:hover:not(.mdc-list-item--disabled),
+.app-dropdown-panel .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+  background: var(--menu-hover) !important;
+}
+
+.app-dropdown-panel .mat-mdc-option.mdc-list-item--selected {
+  background: var(--menu-selected) !important;
+}
+
+/* ==========================================================================
+      Botões
+==========================================================================  */
+
+.page-header button.mat-mdc-raised-button {
+  background: var(--primary-btn-bg);
+  color: var(--primary-btn-text);
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 0 18px;
+  height: 40px;
+  box-shadow: var(--primary-btn-shadow);
+}
+
+.page-header button.mat-mdc-raised-button:hover {
+  background: var(--primary-btn-bg-hover);
+}
+
+/* =========================================
+   FILTER BAR (GLOBAL REUSABLE)
+========================================= */
+
+.filters-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.filters-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* tamanho compacto */
+.filter-field {
+  width: 170px;
+}
+
+.filter-search {
+  width: 260px;
+}
+
+/* compact material fields */
+.filter-field .mat-mdc-text-field-wrapper {
+  height: 38px;
+}
+
+.filter-field .mat-mdc-form-field-infix {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  min-height: 38px;
+}
+
+.filter-field .mdc-text-field {
+  height: 38px;
+}
+
+/* texto */
+.filter-field input,
+.filter-field .mat-mdc-select-value {
+  font-size: 13px;
+}
+
+/* botão limpar */
+.filter-clear {
+  height: 38px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+/* mobile */
+@media (max-width: 900px) {
+  .filters-bar {
+    justify-content: stretch;
+  }
+
+  .filters-group {
+    flex-wrap: wrap;
+  }
 }

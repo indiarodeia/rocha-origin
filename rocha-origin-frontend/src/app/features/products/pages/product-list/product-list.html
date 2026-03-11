@@ -1,23 +1,39 @@
-<app-list-page
-  title="Produtos"
-  addLabel="Novo produto"
-  [dataSource]="dataSource"
-  [displayedColumns]="displayedColumns"
-  [pageSize]="10"
-  (add)="onAddProduct()"
->
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef>ID</th>
-    <td mat-cell *matCellDef="let row">{{ row.id }}</td>
-  </ng-container>
+<app-list-page title="Produtos" addLabel="Novo produto" [dataSource]="dataSource" [displayedColumns]="displayedColumns"
+  [pageSize]="10" (add)="onAddProduct()">
+  <app-list-filters
+    filters
+    [searchText]="searchText"
+    (searchTextChange)="searchText = $event"
+    searchPlaceholder="Nome, código interno ou categoria"
+    cityLabel="Categoria"
+    [cityOptions]="categoryOptions"
+    [cityValue]="categoryFilter"
+    (cityValueChange)="setCategoryFilter($event)"
+    paymentLabel="IVA"
+    [paymentOptions]="vatOptions"
+    [paymentValue]="vatFilter"
+    (paymentValueChange)="setVatFilter($event)"
+    (changed)="applyFilters()"
+    (clear)="clearFilters()"
+  ></app-list-filters>
 
   <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>Produto</th>
-    <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+    <th mat-header-cell *matHeaderCellDef>
+      <button class="sort-header-btn" mat-button type="button" (click)="onHeaderSort('name')">
+        Produto
+        <mat-icon>{{ sortIcon('name') }}</mat-icon>
+      </button>
+    </th>
+    <td class="text-bold-table" mat-cell *matCellDef="let row">{{ row.name }}</td>
   </ng-container>
 
   <ng-container matColumnDef="category">
-    <th mat-header-cell *matHeaderCellDef>Categoria</th>
+    <th mat-header-cell *matHeaderCellDef>
+      <button class="sort-header-btn" mat-button type="button" (click)="onHeaderSort('category')">
+        Categoria
+        <mat-icon>{{ sortIcon('category') }}</mat-icon>
+      </button>
+    </th>
     <td mat-cell *matCellDef="let row">{{ row.category }}</td>
   </ng-container>
 
@@ -27,7 +43,12 @@
   </ng-container>
 
   <ng-container matColumnDef="defaultPrice">
-    <th mat-header-cell *matHeaderCellDef>Preco Base</th>
+    <th mat-header-cell *matHeaderCellDef>
+      <button class="sort-header-btn" mat-button type="button" (click)="onHeaderSort('defaultPrice')">
+        Preco Base
+        <mat-icon>{{ sortIcon('defaultPrice') }}</mat-icon>
+      </button>
+    </th>
     <td mat-cell *matCellDef="let row">{{ row.defaultPrice | currency: 'EUR' : 'symbol' : '1.2-2' }}</td>
   </ng-container>
 
@@ -37,7 +58,12 @@
   </ng-container>
 
   <ng-container matColumnDef="status">
-    <th mat-header-cell *matHeaderCellDef>Estado</th>
+    <th mat-header-cell *matHeaderCellDef>
+      <button class="sort-header-btn" mat-button type="button" (click)="onHeaderSort('status')">
+        Estado
+        <mat-icon>{{ sortIcon('status') }}</mat-icon>
+      </button>
+    </th>
     <td mat-cell *matCellDef="let row">
       <span class="status-pill" [class.status-active]="row.status === 'Ativo'">
         {{ row.status }}

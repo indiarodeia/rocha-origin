@@ -1,0 +1,75 @@
+<div mat-dialog-title class="dialog-title-wrap">
+  <h2 class="dialog-title">Novo produto</h2>
+  <p class="dialog-subtitle">Define os dados base do produto. Pode ajustar tudo depois.</p>
+</div>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="dialog-form">
+    <div class="grid two-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="name" placeholder="Ex: Hamburguer Artesanal 90g">
+        <mat-error *ngIf="hasError('name', 'required')">Nome obrigatorio.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Categoria</mat-label>
+        <input matInput formControlName="category" [matAutocomplete]="categoryAuto"
+          placeholder="Ex: Preparados de Carne">
+        <mat-autocomplete #categoryAuto="matAutocomplete" (optionSelected)="onCategorySelected($event)">
+          <mat-option *ngFor="let category of filteredCategories" [value]="category">
+            {{ category }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="hasError('category', 'required')">Categoria obrigatoria.</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="grid three-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Unidade base</mat-label>
+        <mat-select panelClass="app-dropdown-panel" formControlName="defaultUnit">
+          <mat-option value="KG">KG</mat-option>
+          <mat-option value="UN">UN</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Preco base</mat-label>
+        <input matInput type="number" min="0" step="0.01" formControlName="defaultPrice">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>IVA (%)</mat-label>
+        <input matInput type="number" min="0" max="100" step="0.01" formControlName="defaultVatRate">
+      </mat-form-field>
+    </div>
+
+    <div class="grid two-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Codigo interno</mat-label>
+        <input matInput formControlName="internalCode" placeholder="Ex: BOV-HAMB-090">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" *ngIf="isUnitUn">
+        <mat-label>Peso aprox. por unidade (kg) - opcional</mat-label>
+        <input matInput type="number" min="0" step="0.001" formControlName="defaultApproxKgPerUnit">
+        <mat-error *ngIf="hasError('defaultApproxKgPerUnit', 'min')">
+          O valor deve ser maior que zero.
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descricao (opcional)</mat-label>
+      <textarea matInput rows="3" formControlName="description"></textarea>
+    </mat-form-field>
+
+    <mat-slide-toggle formControlName="isActive">Produto ativo</mat-slide-toggle>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button class="btn-cancel" mat-button type="button" (click)="close()">Cancelar</button>
+  <button class="btn-create" mat-raised-button type="button" (click)="create()">Criar produto</button>
+</mat-dialog-actions>

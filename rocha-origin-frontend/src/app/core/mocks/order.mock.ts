@@ -1,4 +1,8 @@
-import { Establishment } from '../models/establishment.model';
+import {
+  Establishment,
+  EstablishmentMenuItem,
+  EstablishmentProductPrice,
+} from '../models/establishment.model';
 import { OrderItem } from '../models/order-item.model';
 import { Order } from '../models/order.model';
 import { Route } from '../models/route.model';
@@ -82,6 +86,59 @@ export const MOCK_ESTABLISHMENTS: Establishment[] = [
     createdAt: '2026-01-20T07:45:00',
     updatedAt: '2026-02-25T09:20:00',
   },
+];
+
+export const MOCK_ESTABLISHMENT_MENU_ITEMS: EstablishmentMenuItem[] = [
+  {
+    id: 'mi001',
+    establishmentId: 'e1',
+    name: 'Bitoque',
+    description: 'Prato diario com carne grelhada e ovo',
+    isActive: true,
+    createdAt: '2026-01-15T09:00:00',
+    updatedAt: '2026-03-01T10:00:00',
+  },
+  {
+    id: 'mi002',
+    establishmentId: 'e1',
+    name: 'Bife na Pedra',
+    isActive: true,
+    createdAt: '2026-01-15T09:05:00',
+    updatedAt: '2026-03-01T10:05:00',
+  },
+  {
+    id: 'mi003',
+    establishmentId: 'e2',
+    name: 'Hamburguer da Casa',
+    isActive: true,
+    createdAt: '2026-01-20T08:00:00',
+    updatedAt: '2026-03-02T12:00:00',
+  },
+  {
+    id: 'mi004',
+    establishmentId: 'e3',
+    name: 'Alcatra no Forno',
+    isActive: true,
+    createdAt: '2026-01-25T11:00:00',
+    updatedAt: '2026-03-03T15:00:00',
+  },
+  {
+    id: 'mi005',
+    establishmentId: 'e4',
+    name: 'Bifana em Pao de Lenco',
+    isActive: true,
+    createdAt: '2026-01-27T11:00:00',
+    updatedAt: '2026-03-03T16:30:00',
+  },
+];
+
+export const MOCK_ESTABLISHMENT_PRODUCT_PRICES: EstablishmentProductPrice[] = [
+  { establishmentId: 'e1', productId: 'pr001', price: 27.5 },
+  { establishmentId: 'e1', productId: 'pr004', price: 15.9 },
+  { establishmentId: 'e2', productId: 'pr007', price: 12.4 },
+  { establishmentId: 'e3', productId: 'pr003', price: 19.75 },
+  { establishmentId: 'e4', productId: 'pr010', price: 8.2 },
+  { establishmentId: 'e5', productId: 'pr002', price: 25.9 },
 ];
 
 export const MOCK_ORDERS: Order[] = [

@@ -6,7 +6,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -15,7 +14,6 @@ import { DomSanitizer } from '@angular/platform-browser';
   selector: 'app-root',
   imports: [
     RouterOutlet,
-    MatToolbarModule,
     MatButtonModule,
     RouterModule,
     MatSidenavModule,

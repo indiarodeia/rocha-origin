@@ -52,7 +52,7 @@ export const MOCK_PRODUCTS: Product[] = [
   {
     id: 'pr005',
     name: 'Alcatra Regional',
-    category: 'Tradicional Portugues',
+    category: 'Tradicional',
     defaultUnit: 'KG',
     defaultVatRate: 6,
     internalCode: 'BOV-ALCA',
@@ -64,7 +64,7 @@ export const MOCK_PRODUCTS: Product[] = [
   {
     id: 'pr006',
     name: 'Bife da Vazia',
-    category: 'Tradicional Portugues',
+    category: 'Tradicional',
     defaultUnit: 'KG',
     defaultVatRate: 6,
     internalCode: 'BOV-VAZI',
@@ -76,7 +76,7 @@ export const MOCK_PRODUCTS: Product[] = [
   {
     id: 'pr007',
     name: 'Bife do Lombo',
-    category: 'Tradicional Portugues',
+    category: 'Tradicional',
     defaultUnit: 'KG',
     defaultVatRate: 6,
     internalCode: 'BOV-LOMB',
@@ -94,6 +94,7 @@ export const MOCK_PRODUCTS: Product[] = [
     internalCode: 'BOV-HAMB-180',
     description: 'Hamburguer de vaca 100%, tempero suave.',
     defaultPrice: 2.3,
+    defaultApproxKgPerUnit: 0.18,
     isActive: true,
     createdAt: '2026-01-12T10:00:00',
   },
@@ -106,6 +107,7 @@ export const MOCK_PRODUCTS: Product[] = [
     internalCode: 'ENC-LING',
     description: 'Linguica fresca para grelha.',
     defaultPrice: 2.8,
+    defaultApproxKgPerUnit: 0.09,
     isActive: true,
     createdAt: '2026-01-12T10:20:00',
   },
@@ -124,7 +126,7 @@ export const MOCK_PRODUCTS: Product[] = [
   {
     id: 'pr011',
     name: 'Carne Picada Extra',
-    category: 'Tradicional Portugues',
+    category: 'Tradicional',
     defaultUnit: 'KG',
     defaultVatRate: 6,
     internalCode: 'BOV-PICA-X',
@@ -136,7 +138,7 @@ export const MOCK_PRODUCTS: Product[] = [
   {
     id: 'pr012',
     name: 'Entrecosto de Novilho',
-    category: 'Tradicional Portugues',
+    category: 'Tradicional',
     defaultUnit: 'KG',
     defaultVatRate: 6,
     internalCode: 'BOV-ENTR',

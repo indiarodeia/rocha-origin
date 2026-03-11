@@ -161,4 +161,103 @@ export const MOCK_CLIENTS: Client[] = [
     createdAt: '2026-02-05T11:25:00',
     updatedAt: '2026-03-10T09:45:00',
   },
+  {
+    id: 'cl011',
+    companyName: 'Grupo Sabores da Terceira',
+    vatNumber: '513456782',
+    phone: '295220450',
+    email: 'compras@saboresterceira.pt',
+
+    billingStreet: 'Rua de São Pedro',
+    billingDoorNumber: '18',
+    billingPostalCode: '9700-187',
+    billingCity: 'Angra do Heroísmo',
+    billingCountry: 'Portugal',
+
+    defaultPaymentType: 'CREDIT',
+    notes: 'Entregas divididas por estabelecimento.',
+
+    createdAt: '2026-02-10T09:30:00',
+    updatedAt: '2026-03-10T10:10:00',
+
+    establishments: [
+      {
+        id: 'est021',
+        clientId: 'cl011',
+
+        name: 'Sabores da Terceira - Angra',
+        isActive: true,
+
+        deliveryStreet: 'Rua de São João',
+        deliveryDoorNumber: '14',
+        deliveryPostalCode: '9700-180',
+        deliveryCity: 'Angra do Heroísmo',
+
+        localContactPhone: '295220451',
+
+        createdAt: '2026-02-10T09:30:00',
+        updatedAt: '2026-03-10T10:10:00',
+
+        menuItems: [
+          {
+            id: 'menu201',
+            establishmentId: 'est021',
+            name: 'Bife da Vazia',
+            description: 'Bife de novilho açoriano grelhado com alho e manteiga',
+            isActive: true,
+            createdAt: '2026-02-10T09:30:00',
+            updatedAt: '2026-03-10T10:10:00',
+          },
+          {
+            id: 'menu202',
+            establishmentId: 'est021',
+            name: 'Hambúrguer Artesanal',
+            description: 'Hambúrguer de novilho com queijo da ilha',
+            isActive: true,
+            createdAt: '2026-02-10T09:30:00',
+            updatedAt: '2026-03-10T10:10:00',
+          },
+        ],
+      },
+
+      {
+        id: 'est022',
+        clientId: 'cl011',
+
+        name: 'Sabores da Terceira - Praia',
+        isActive: true,
+
+        deliveryStreet: 'Avenida Beira Mar',
+        deliveryDoorNumber: '7',
+        deliveryPostalCode: '9760-412',
+        deliveryCity: 'Praia da Vitória',
+
+        localContactPhone: '295220452',
+
+        createdAt: '2026-02-10T09:30:00',
+        updatedAt: '2026-03-10T10:10:00',
+
+        menuItems: [
+          {
+            id: 'menu203',
+            establishmentId: 'est022',
+            name: 'Alcatra Regional',
+            description: 'Alcatra terceirense cozinhada em vinho e especiarias',
+            isActive: true,
+            createdAt: '2026-02-10T09:30:00',
+            updatedAt: '2026-03-10T10:10:00',
+          },
+          {
+            id: 'menu204',
+            establishmentId: 'est022',
+            name: 'Espetada de Novilho',
+            description: 'Espetada de carne grelhada com pimentos e cebola',
+            isActive: true,
+            createdAt: '2026-02-10T09:30:00',
+            updatedAt: '2026-03-10T10:10:00',
+          },
+        ],
+      },
+    ],
+  },
 ];

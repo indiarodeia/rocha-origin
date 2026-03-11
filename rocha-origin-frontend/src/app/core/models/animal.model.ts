@@ -32,4 +32,6 @@ export interface Animal {
   notes?: string;
 
   createdAt: string;
+
+  lotId?: string;
 }

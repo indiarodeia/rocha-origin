@@ -2,6 +2,22 @@
   display: block;
 }
 
+.sort-header-btn {
+  min-width: auto;
+  padding: 0;
+  --mdc-text-button-label-text-color: currentColor;
+  color: inherit !important;
+  line-height: 1.2;
+}
+
+.sort-header-btn .mat-icon {
+  margin-left: 4px;
+  color: inherit !important;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
 .status-pill {
   display: inline-flex;
   border-radius: 999px;

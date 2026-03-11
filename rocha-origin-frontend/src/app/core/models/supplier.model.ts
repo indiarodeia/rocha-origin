@@ -1,8 +1,11 @@
+import { Animal } from './animal.model';
+
 export interface Supplier {
   id: string;
   name: string;
 
   vatNumber?: string;
+  vatRate?: number;
   explorationCode?: string;
 
   addressStreet?: string;
@@ -17,4 +20,6 @@ export interface Supplier {
   profileJson?: string; // For future use in Meatazores
 
   createdAt: string;
+
+  animals?: Animal[];
 }

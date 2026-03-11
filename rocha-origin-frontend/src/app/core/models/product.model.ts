@@ -12,6 +12,7 @@ export interface Product {
   description?: string;
 
   defaultPrice?: number;
+  defaultApproxKgPerUnit?: number;
 
   isActive: boolean;
 

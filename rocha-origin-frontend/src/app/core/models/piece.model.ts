@@ -1,3 +1,7 @@
+import { Animal } from './animal.model';
+import { Lot } from './lot.model';
+import { OrderItem } from './order-item.model';
+
 export interface Piece {
   id: string; // internal uuid
   publicId: string; // for QR access
@@ -10,4 +14,8 @@ export interface Piece {
   processDays?: number;
   netWeightKg: number;
   createdAt: string;
+
+  orderItem?: OrderItem;
+  animal?: Animal;
+  lot?: Lot;
 }

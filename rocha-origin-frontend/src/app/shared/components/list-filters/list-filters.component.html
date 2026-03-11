@@ -1,0 +1,95 @@
+<div class="filters-bar">
+
+  <div class="filters-group">
+
+    <!-- SEARCH -->
+    <mat-form-field appearance="outline" class="filter-field filter-search">
+      <mat-icon class="icon-input" matPrefix>search</mat-icon>
+
+      <input matInput [ngModel]="searchText" (ngModelChange)="onSearchChange($event)" [placeholder]="searchPlaceholder">
+    </mat-form-field>
+
+
+    <!-- CITY -->
+    <mat-form-field appearance="outline" class="filter-field" *ngIf="cityOptions.length">
+
+      <mat-label>{{ cityLabel }}</mat-label>
+
+      <mat-select panelClass="filters-panel" [multiple]="cityMultiple" [ngModel]="cityValue"
+        (ngModelChange)="onCityChange($event)">
+
+        <mat-option *ngIf="cityShowAllOption && !cityMultiple" value="ALL">{{ cityAllLabel }}</mat-option>
+
+        <mat-option *ngFor="let city of cityOptions" [value]="city">
+
+          {{ city }}
+
+        </mat-option>
+
+      </mat-select>
+
+    </mat-form-field>
+
+
+    <!-- PAYMENT -->
+    <mat-form-field appearance="outline" class="filter-field" *ngIf="paymentOptions.length">
+
+      <mat-label>{{ paymentLabel }}</mat-label>
+
+      <mat-select panelClass="filters-panel" [multiple]="paymentMultiple" [ngModel]="paymentValue"
+        (ngModelChange)="onPaymentChange($event)">
+
+        <mat-option *ngIf="paymentShowAllOption && !paymentMultiple" value="ALL">{{ paymentAllLabel }}</mat-option>
+
+        <mat-option *ngFor="let payment of paymentOptions" [value]="payment.value">
+
+          <mat-icon *ngIf="payment.icon">
+            {{ payment.icon }}
+          </mat-icon>
+
+          {{ payment.label }}
+
+        </mat-option>
+
+      </mat-select>
+
+    </mat-form-field>
+
+
+    <!-- SORT -->
+    <mat-form-field appearance="outline" class="filter-field" *ngIf="sortOptions.length">
+
+      <mat-label>{{ sortLabel }}</mat-label>
+
+      <mat-select panelClass="filters-panel" [multiple]="sortMultiple" [ngModel]="sortValue"
+        (ngModelChange)="onSortChange($event)">
+
+        <mat-option *ngIf="sortShowAllOption && !sortMultiple" value="ALL">{{ sortAllLabel }}</mat-option>
+
+        <mat-option *ngFor="let option of sortOptions" [value]="option.value">
+
+          <mat-icon *ngIf="option.icon">
+            {{ option.icon }}
+          </mat-icon>
+
+          {{ option.label }}
+
+        </mat-option>
+
+      </mat-select>
+
+    </mat-form-field>
+
+
+    <!-- CLEAR -->
+    <ng-content select="[filters-extra]"></ng-content>
+
+    <button mat-stroked-button class="filter-clear" type="button" *ngIf="showClear" (click)="clear.emit()">
+
+      {{ clearLabel }}
+
+    </button>
+
+  </div>
+
+</div>

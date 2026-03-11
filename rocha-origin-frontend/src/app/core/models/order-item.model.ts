@@ -1,3 +1,5 @@
+import { Animal } from './animal.model';
+import { Lot } from './lot.model';
 import { UnitType } from './types.model';
 import { TraceabilitySourceType } from './types.model';
 import { OrderStatus } from './types.model';
@@ -21,6 +23,7 @@ export interface OrderItem {
 
   unitPrice?: number;
   priceUnit?: UnitType;
+  vatRate?: number;
 
   preparedQuantity?: number;
   preparedUnit?: UnitType;
@@ -39,4 +42,7 @@ export interface OrderItem {
   preparedByUserId?: string;
 
   prepNotes?: string;
+
+  animal?: Animal;
+  lot?: Lot;
 }

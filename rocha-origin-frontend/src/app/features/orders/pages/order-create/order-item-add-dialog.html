@@ -1,0 +1,157 @@
+<h2 mat-dialog-title>{{ data.mode === 'edit' ? 'Editar produto' : 'Adicionar produto' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="dialog-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Selecionar produto</mat-label>
+      <input type="text" matInput formControlName="productSearch" [matAutocomplete]="productAuto"
+        placeholder="Nome, codigo interno ou categoria">
+      <button mat-icon-button matSuffix type="button" (click)="clearProductSelection()" tabindex="-1"
+        aria-label="Limpar produto">
+        x
+      </button>
+      <mat-autocomplete #productAuto="matAutocomplete" (optionSelected)="onProductSelected($event)">
+        <mat-option *ngFor="let product of filteredProducts" [value]="product.id">
+          {{ product.name }} - {{ product.category }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="hasError('productId', 'required')">
+        Seleciona um produto da lista.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width" *ngIf="hasMenuItems; else freeMenuItemInput">
+      <mat-label>Prato correspondente do menu do restaurante</mat-label>
+      <mat-select panelClass="app-dropdown-panel" formControlName="establishmentMenuItemId">
+        <mat-option value="">Sem menu item</mat-option>
+        <mat-option *ngFor="let menuItem of data.menuItems" [value]="menuItem.id">
+          {{ menuItem.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <ng-template #freeMenuItemInput>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Prato do menu que será servido</mat-label>
+        <input matInput formControlName="establishmentMenuItemId" placeholder="Ex: Bitoque da casa">
+      </mat-form-field>
+    </ng-template>
+
+    <div class="section-title">Quantidade</div>
+    <div class="grid two-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Tipo de unidade</mat-label>
+        <mat-select panelClass="app-dropdown-panel" formControlName="requestedUnit">
+          <mat-option value="KG">KG</mat-option>
+          <mat-option value="UN">UN</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ isUnitKg ? 'Quantidade' : 'Quantidade (inteiro)' }}</mat-label>
+        <input matInput type="number" min="0" [step]="isUnitKg ? '0.01' : '1'" formControlName="requestedQuantity">
+        <mat-error *ngIf="hasError('requestedQuantity', 'required')">
+          A quantidade e obrigatoria.
+        </mat-error>
+        <mat-error *ngIf="hasError('requestedQuantity', 'min')">
+          O valor deve ser maior que zero.
+        </mat-error>
+        <mat-error *ngIf="hasError('requestedQuantity', 'integer')">
+          Para unidade UN so sao permitidos numeros inteiros.
+        </mat-error>
+      </mat-form-field>
+
+    </div>
+
+    <div class="grid two-cols">
+
+      <mat-form-field appearance="outline" *ngIf="!isUnitKg">
+        <mat-label>Unidade peso aprox.</mat-label>
+        <mat-select panelClass="app-dropdown-panel" formControlName="approxWeightUnit">
+          <mat-option value="KG">kg</mat-option>
+          <mat-option value="G">g</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" *ngIf="!isUnitKg">
+        <mat-label>{{ form.controls.approxWeightUnit.value === 'G' ? 'Peso aprox. por unidade (g)' : 'Peso aprox. por
+          unidade (kg)' }}</mat-label>
+        <input matInput type="number" min="0" step="0.01" formControlName="approxWeightValue">
+        <mat-error *ngIf="hasError('approxWeightValue', 'min')">
+          O peso aproximado deve ser maior que zero.
+        </mat-error>
+      </mat-form-field>
+
+    </div>
+
+    <div class="section-title">Origem (animal / lote / nenhum)</div>
+    <div class="grid three-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Origem</mat-label>
+        <mat-select panelClass="app-dropdown-panel" formControlName="traceabilitySourceType">
+          <mat-option *ngFor="let source of traceabilityOptions" [value]="source.value">
+            {{ source.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" *ngIf="traceabilitySource === 'ANIMAL'">
+        <mat-label>Animal</mat-label>
+        <input matInput type="text" formControlName="animalSearch" [matAutocomplete]="animalAuto"
+          placeholder="Pesquisar por ID PT, raca ou data de abate">
+        <mat-autocomplete #animalAuto="matAutocomplete" (optionSelected)="onAnimalSelected($event)">
+          <mat-option *ngFor="let animal of filteredAnimals" [value]="animal.id">
+            {{ animal.identification }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="hasError('animalId', 'required')">
+          Seleciona um animal.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" *ngIf="traceabilitySource === 'LOT'">
+        <mat-label>Lote</mat-label>
+        <mat-select panelClass="app-dropdown-panel" formControlName="lotId">
+          <mat-option *ngFor="let lot of data.lotOptions" [value]="lot.id">
+            {{ lot.label }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="hasError('lotId', 'required')">
+          Seleciona um lote.
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="section-title">Preco</div>
+    <div class="grid three-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Preco por</mat-label>
+        <mat-select panelClass="app-dropdown-panel" formControlName="priceUnit">
+          <mat-option *ngFor="let unit of unitOptions" [value]="unit">{{ unit }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Preco</mat-label>
+        <input matInput type="number" min="0" step="0.01" formControlName="unitPrice">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>IVA (%)</mat-label>
+        <input matInput type="number" min="0" step="0.01" formControlName="vatRate">
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Notas da encomenda</mat-label>
+      <textarea matInput rows="2" formControlName="requestNotes"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="close()">Cancelar</button>
+  <button mat-raised-button color="primary" type="button" (click)="addItem()">
+    {{ submitLabel }}
+  </button>
+</mat-dialog-actions>

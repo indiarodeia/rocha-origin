@@ -1,23 +1,27 @@
-<app-list-page
-  title="Fornecedores"
-  addLabel="Novo fornecedor"
-  [dataSource]="dataSource"
-  [displayedColumns]="displayedColumns"
-  [pageSize]="10"
-  (add)="onAddSupplier()"
->
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef>ID</th>
-    <td mat-cell *matCellDef="let row">{{ row.id }}</td>
-  </ng-container>
+<app-list-page title="Fornecedores" addLabel="Novo fornecedor" [dataSource]="dataSource"
+  [displayedColumns]="displayedColumns" [pageSize]="10" (add)="onAddSupplier()">
+  <app-list-filters
+    filters
+    [searchText]="searchText"
+    (searchTextChange)="searchText = $event"
+    searchPlaceholder="Nome, NIF, código, telefone ou email"
+    [cityOptions]="cityOptions"
+    [cityValue]="cityFilter"
+    (cityValueChange)="setCityFilter($event)"
+    [sortOptions]="sortOptions"
+    [sortValue]="sortBy"
+    (sortValueChange)="setSortBy($event)"
+    (changed)="applyFilters()"
+    (clear)="clearFilters()"
+  ></app-list-filters>
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Nome</th>
-    <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+    <td mat-cell class="text-bold-table" *matCellDef="let row">{{ row.name }}</td>
   </ng-container>
 
   <ng-container matColumnDef="explorationCode">
-    <th mat-header-cell *matHeaderCellDef>Codigo Exploracao</th>
+    <th mat-header-cell *matHeaderCellDef>Código Exploração</th>
     <td mat-cell *matCellDef="let row">{{ row.explorationCode }}</td>
   </ng-container>
 
@@ -32,7 +36,7 @@
   </ng-container>
 
   <ng-container matColumnDef="certifications">
-    <th mat-header-cell *matHeaderCellDef>Certificacoes</th>
+    <th mat-header-cell *matHeaderCellDef>Certificações</th>
     <td mat-cell *matCellDef="let row" class="certifications-cell">{{ row.certifications }}</td>
   </ng-container>
 </app-list-page>

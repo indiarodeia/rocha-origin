@@ -3,6 +3,7 @@
     <div class="page-header">
         <h1>{{ title }}</h1>
 
+
         <button mat-raised-button color="primary" *ngIf="addLabel" (click)="add.emit()">
             {{ addLabel }}
         </button>
@@ -14,7 +15,7 @@
 
     <div class="table">
 
-        <table mat-table [dataSource]="dataSource">
+        <table mat-table [dataSource]="dataSource" matSort>
 
             <ng-content></ng-content>
 

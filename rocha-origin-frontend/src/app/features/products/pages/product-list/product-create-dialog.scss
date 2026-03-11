@@ -1,0 +1,69 @@
+.dialog-title-wrap {
+  margin-bottom: 2px;
+}
+
+.dialog-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.dialog-subtitle {
+  margin: 6px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: min(760px, 82vw);
+  padding-top: 4px;
+}
+
+.grid {
+  display: grid;
+  gap: 12px;
+}
+
+.grid.two-cols {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid.three-cols {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.full-width {
+  width: 100%;
+}
+
+.btn-cancel {
+  color: #1d4ed8 !important;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+}
+
+.btn-create {
+  color: #fff !important;
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%) !important;
+  box-shadow: 0 8px 18px -10px rgba(37, 99, 235, 0.8);
+}
+
+.btn-create:hover {
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%) !important;
+}
+
+@media (max-width: 840px) {
+  .dialog-form {
+    min-width: min(96vw, 560px);
+  }
+
+  .grid.two-cols,
+  .grid.three-cols {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,6 +1,7 @@
 import {
   AfterContentInit,
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   EventEmitter,
@@ -14,6 +15,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { MatColumnDef, MatTable, MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { MATERIAL_MODULES } from '../../material/material.module';
@@ -28,6 +30,8 @@ import { MATERIAL_MODULES } from '../../material/material.module';
 export class ListPageComponent<T>
   implements AfterContentInit, AfterViewInit, OnChanges, OnDestroy
 {
+  constructor(private readonly cdr: ChangeDetectorRef) {}
+
   @Input() title = '';
   @Input() addLabel?: string;
 
@@ -42,6 +46,7 @@ export class ListPageComponent<T>
 
   @ViewChild(MatTable) table?: MatTable<T>;
   @ViewChild(MatPaginator) paginator?: MatPaginator;
+  @ViewChild(MatSort) sort?: MatSort;
   @ContentChildren(MatColumnDef, { descendants: true })
   projectedColumnDefs?: QueryList<MatColumnDef>;
 
@@ -52,17 +57,22 @@ export class ListPageComponent<T>
     this.syncColumnDefs();
     this.projectedColumnDefsSub = this.projectedColumnDefs?.changes.subscribe(() => {
       this.syncColumnDefs();
+      this.cdr.detectChanges();
     });
+    this.cdr.detectChanges();
   }
 
   ngAfterViewInit(): void {
     this.bindPaginator();
+    this.bindSort();
     this.syncColumnDefs();
+    this.cdr.detectChanges();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSource']) {
       this.bindPaginator();
+      this.bindSort();
     }
     if (changes['displayedColumns']) {
       this.syncColumnDefs();
@@ -80,6 +90,14 @@ export class ListPageComponent<T>
     }
 
     this.dataSource.paginator = this.paginator;
+  }
+
+  private bindSort(): void {
+    if (!this.dataSource || !this.sort) {
+      return;
+    }
+
+    this.dataSource.sort = this.sort;
   }
 
   private syncColumnDefs(): void {

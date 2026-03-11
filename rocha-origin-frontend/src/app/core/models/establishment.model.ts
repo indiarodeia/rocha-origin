@@ -16,6 +16,8 @@ export interface Establishment {
 
   createdAt: string;
   updatedAt: string;
+
+  menuItems?: EstablishmentMenuItem[];
 }
 
 export interface EstablishmentMenuItem {
@@ -30,4 +32,10 @@ export interface EstablishmentMenuItem {
 
   createdAt: string;
   updatedAt: string;
+}
+
+export interface EstablishmentProductPrice {
+  establishmentId: string;
+  productId: string;
+  price: number;
 }
