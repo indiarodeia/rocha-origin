@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import {
   MOCK_ESTABLISHMENTS,
@@ -91,7 +92,7 @@ export class OrdersList {
 
   readonly dataSource = new MatTableDataSource<OrderListRow>([]);
 
-  constructor() {
+  constructor(private readonly router: Router) {
     this.applyFilters();
   }
 
@@ -196,7 +197,6 @@ export class OrdersList {
   }
 
   onAddOrder(): void {
-    // Placeholder until order creation flow exists.
-    console.log('Criar nova encomenda');
+    this.router.navigate(['/nova-encomenda']);
   }
 }
