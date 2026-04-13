@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -39,12 +39,25 @@ export class App {
   constructor(
     private iconRegistry: MatIconRegistry,
     private sanitizer: DomSanitizer,
+    private readonly router: Router,
   ) {
     this.registerIcons();
   }
 
   toggleSidebar(): void {
     this.isCollapsed = !this.isCollapsed;
+  }
+
+  isAuthRoute(): boolean {
+    return this.router.url.startsWith('/login');
+  }
+
+  login(): void {
+    void this.router.navigate(['/login']);
+  }
+
+  logout(): void {
+    void this.router.navigate(['/login']);
   }
 
   private registerIcons(): void {

@@ -1,105 +1,123 @@
-<mat-sidenav-container class="rocha-layout">
+<ng-container *ngIf="!isAuthRoute(); else authLayout">
+  <mat-sidenav-container class="rocha-layout" autosize>
 
-  <mat-sidenav mode="side" opened [class.collapsed]="isCollapsed">
+    <mat-sidenav mode="side" opened [class.collapsed]="isCollapsed">
 
-    <div class="sidebar-toggle-row">
-      <button mat-icon-button type="button" (click)="toggleSidebar()" aria-label="Expandir ou encolher menu">
-        <mat-icon>{{ isCollapsed ? 'menu' : 'menu_open' }}</mat-icon>
-      </button>
-    </div>
-
-    <div class="brand">
-      <ng-container *ngIf="!isCollapsed; else collapsedBrand">
-        <img class="brand-logo" src="assets/logo-rocha.svg" alt="Rocha Talho e Mercado" />
-      </ng-container>
-
-      <ng-template #collapsedBrand>
-        <img class="brand-logo-icon" src="assets/logo-rocha-icon.svg" alt="Rocha Talho e Mercado" />
-      </ng-template>
-
-      <div class="divider"></div>
-    </div>
-
-    <mat-nav-list class="wrapper-nav">
-
-      <a mat-list-item routerLink="/dashboard" routerLinkActive="nav-active"
-        [routerLinkActiveOptions]="{ exact: true }">
-        <mat-icon svgIcon="icon-dashboard"></mat-icon>
-        <span class="label" *ngIf="!isCollapsed">Dashboard</span>
-      </a>
-
-      <a mat-list-item routerLink="/nova-encomenda" routerLinkActive="nav-active"
-        [routerLinkActiveOptions]="{ exact: true }">
-        <mat-icon svgIcon="icon-add-order"></mat-icon>
-        <span class="label" *ngIf="!isCollapsed">Nova Encomenda</span>
-      </a>
-
-      <a mat-list-item routerLink="/encomendas" routerLinkActive="nav-active"
-        [routerLinkActiveOptions]="{ exact: true }">
-        <mat-icon svgIcon="icon-orders"></mat-icon>
-        <span class="label" *ngIf="!isCollapsed">Encomendas</span>
-      </a>
-
-      <div class="section-divider"></div>
-
-
-
-      <div class="menu-section">
-
-        <div class="menu-section-header" (click)="toggleManagement()">
-          <mat-icon svgIcon="icon-setting"></mat-icon>
-          <span class="label" *ngIf="!isCollapsed">Gestão</span>
-
-          <span class="spacer"></span>
-
-          <mat-icon *ngIf="!isCollapsed">
-            {{ isManagementOpen ? 'expand_less' : 'expand_more' }}
-          </mat-icon>
-        </div>
-
-        <div class="flex-row">
-          <img class="menu-tree" src="assets/menu-tree.svg" alt="Menu Tree" *ngIf="!isCollapsed" />
-
-          <div class="submenu" *ngIf="isManagementOpen && !isCollapsed">
-
-            <a mat-list-item routerLink="/clientes" routerLinkActive="nav-active" class="subitem">
-              <mat-icon svgIcon="icon-clients"></mat-icon>
-              <span class="label">Clientes</span>
-            </a>
-
-            <a mat-list-item routerLink="/fornecedores" routerLinkActive="nav-active" class="subitem">
-              <mat-icon svgIcon="icon-suppliers"></mat-icon>
-              <span class="label">Fornecedores</span>
-            </a>
-
-            <a mat-list-item routerLink="/produtos" routerLinkActive="nav-active" class="subitem">
-              <mat-icon svgIcon="icon-meat"></mat-icon>
-              <span class="label">Produtos</span>
-            </a>
-
-            <a mat-list-item routerLink="/animais" routerLinkActive="nav-active" class="subitem">
-              <mat-icon svgIcon="icon-cow"></mat-icon>
-              <span class="label">Animais</span>
-            </a>
-
-            <a mat-list-item routerLink="/configuracoes" routerLinkActive="nav-active" class="subitem">
-              <mat-icon svgIcon="icon-setting"></mat-icon>
-              <span class="label">Configurações</span>
-            </a>
-
-          </div>
-        </div>
+      <div class="sidebar-toggle-row">
+        <button mat-icon-button type="button" (click)="toggleSidebar()" aria-label="Expandir ou encolher menu">
+          <mat-icon>{{ isCollapsed ? 'menu' : 'menu_open' }}</mat-icon>
+        </button>
       </div>
 
-    </mat-nav-list>
+      <div class="brand">
+        <ng-container *ngIf="!isCollapsed; else collapsedBrand">
+          <img class="brand-logo" src="assets/logo-rocha.svg" alt="Rocha Talho e Mercado" />
+        </ng-container>
 
-  </mat-sidenav>
+        <ng-template #collapsedBrand>
+          <img class="brand-logo-icon" src="assets/logo-rocha-icon.svg" alt="Rocha Talho e Mercado" />
+        </ng-template>
 
-  <mat-sidenav-content>
+        <div class="divider"></div>
+      </div>
 
-    <div class="content">
-      <router-outlet></router-outlet>
-    </div>
+      <mat-nav-list class="wrapper-nav">
 
-  </mat-sidenav-content>
-</mat-sidenav-container>
+        <a mat-list-item routerLink="/dashboard" routerLinkActive="nav-active"
+          [routerLinkActiveOptions]="{ exact: true }">
+          <mat-icon svgIcon="icon-dashboard"></mat-icon>
+          <span class="label" *ngIf="!isCollapsed">Dashboard</span>
+        </a>
+
+        <a mat-list-item routerLink="/nova-encomenda" routerLinkActive="nav-active"
+          [routerLinkActiveOptions]="{ exact: true }">
+          <mat-icon svgIcon="icon-add-order"></mat-icon>
+          <span class="label" *ngIf="!isCollapsed">Nova Encomenda</span>
+        </a>
+
+        <a mat-list-item routerLink="/encomendas" routerLinkActive="nav-active"
+          [routerLinkActiveOptions]="{ exact: true }">
+          <mat-icon svgIcon="icon-orders"></mat-icon>
+          <span class="label" *ngIf="!isCollapsed">Encomendas</span>
+        </a>
+
+        <div class="section-divider"></div>
+
+
+
+        <div class="menu-section">
+
+          <div class="menu-section-header" (click)="toggleManagement()">
+            <mat-icon svgIcon="icon-setting"></mat-icon>
+            <span class="label" *ngIf="!isCollapsed">Gestão</span>
+
+            <span class="spacer"></span>
+
+            <mat-icon *ngIf="!isCollapsed">
+              {{ isManagementOpen ? 'expand_less' : 'expand_more' }}
+            </mat-icon>
+          </div>
+
+          <div class="flex-row">
+            <img class="menu-tree" src="assets/menu-tree.svg" alt="Menu Tree" *ngIf="!isCollapsed" />
+
+            <div class="submenu" *ngIf="isManagementOpen && !isCollapsed">
+
+              <a mat-list-item routerLink="/clientes" routerLinkActive="nav-active" class="subitem">
+                <mat-icon svgIcon="icon-clients"></mat-icon>
+                <span class="label">Clientes</span>
+              </a>
+
+              <a mat-list-item routerLink="/fornecedores" routerLinkActive="nav-active" class="subitem">
+                <mat-icon svgIcon="icon-suppliers"></mat-icon>
+                <span class="label">Fornecedores</span>
+              </a>
+
+              <a mat-list-item routerLink="/produtos" routerLinkActive="nav-active" class="subitem">
+                <mat-icon svgIcon="icon-meat"></mat-icon>
+                <span class="label">Produtos</span>
+              </a>
+
+              <a mat-list-item routerLink="/animais" routerLinkActive="nav-active" class="subitem">
+                <mat-icon svgIcon="icon-cow"></mat-icon>
+                <span class="label">Animais</span>
+              </a>
+
+              <a mat-list-item routerLink="/configuracoes" routerLinkActive="nav-active" class="subitem">
+                <mat-icon svgIcon="icon-setting"></mat-icon>
+                <span class="label">Configurações</span>
+              </a>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <a mat-list-item href="#" (click)="login(); $event.preventDefault()">
+          <mat-icon>login</mat-icon>
+          <span class="label" *ngIf="!isCollapsed">Login</span>
+        </a>
+
+        <a mat-list-item href="#" (click)="logout(); $event.preventDefault()">
+          <mat-icon>logout</mat-icon>
+          <span class="label" *ngIf="!isCollapsed">Logout</span>
+        </a>
+
+      </mat-nav-list>
+
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+
+      <div class="content">
+        <router-outlet></router-outlet>
+      </div>
+
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</ng-container>
+
+<ng-template #authLayout>
+  <router-outlet></router-outlet>
+</ng-template>
