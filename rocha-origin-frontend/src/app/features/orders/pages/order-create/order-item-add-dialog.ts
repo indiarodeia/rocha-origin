@@ -14,35 +14,26 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import {
+  OrderItemAnimalOption,
+  OrderItemLotOption,
+  OrderItemMenuItemOption,
+  OrderItemTraceabilityOption,
+} from '../../../../core/api/mappers/order-item-source.mapper';
 import { EstablishmentProductPrice } from '../../../../core/models/establishment.model';
 import { OrderItem } from '../../../../core/models/order-item.model';
 import { Product } from '../../../../core/models/product.model';
 import { TraceabilitySourceType, UnitType } from '../../../../core/models/types.model';
 
-interface MenuItemOption {
-  id: string;
-  name: string;
-}
-
-interface AnimalOption {
-  id: string;
-  identification: string;
-  breed?: string;
-  slaughterDate?: string;
-}
-
-interface LotOption {
-  id: string;
-  label: string;
-}
-
-interface OrderItemDialogData {
+export interface OrderItemDialogData {
   products: Product[];
   establishmentId: string;
   productPrices: EstablishmentProductPrice[];
-  menuItems: MenuItemOption[];
-  animalOptions: AnimalOption[];
-  lotOptions: LotOption[];
+  menuItems: OrderItemMenuItemOption[];
+  animalOptions: OrderItemAnimalOption[];
+  lotOptions: OrderItemLotOption[];
+  unitOptions: UnitType[];
+  traceabilityOptions: OrderItemTraceabilityOption[];
   mode: 'add' | 'edit';
   item?: OrderItem;
 }
@@ -64,9 +55,9 @@ interface OrderItemDialogData {
   styleUrl: './order-item-add-dialog.scss',
 })
 export class OrderItemAddDialogComponent {
-  readonly unitOptions: UnitType[] = ['KG', 'UN'];
+  private readonly fallbackUnitOptions: UnitType[] = ['KG', 'UN'];
   readonly approxWeightUnitOptions: Array<'KG' | 'G'> = ['KG', 'G'];
-  readonly traceabilityOptions: { value: TraceabilitySourceType; label: string }[] = [
+  private readonly fallbackTraceabilityOptions: OrderItemTraceabilityOption[] = [
     { value: 'NONE', label: 'Nenhum' },
     { value: 'ANIMAL', label: 'Animal' },
     { value: 'LOT', label: 'Lote' },
@@ -139,6 +130,16 @@ export class OrderItemAddDialogComponent {
     this.applyQuantityRules();
   }
 
+  get unitOptions(): UnitType[] {
+    return this.data.unitOptions.length > 0 ? this.data.unitOptions : this.fallbackUnitOptions;
+  }
+
+  get traceabilityOptions(): OrderItemTraceabilityOption[] {
+    return this.data.traceabilityOptions.length > 0
+      ? this.data.traceabilityOptions
+      : this.fallbackTraceabilityOptions;
+  }
+
   get filteredProducts(): Product[] {
     const query = (this.form.controls.productSearch.value ?? '').trim().toLowerCase();
 
@@ -157,7 +158,7 @@ export class OrderItemAddDialogComponent {
       .slice(0, 8);
   }
 
-  get filteredAnimals(): AnimalOption[] {
+  get filteredAnimals(): OrderItemAnimalOption[] {
     const query = (this.form.controls.animalSearch.value ?? '').trim().toLowerCase();
 
     if (!query) {
@@ -189,7 +190,7 @@ export class OrderItemAddDialogComponent {
   }
 
   get submitLabel(): string {
-    return this.data.mode === 'edit' ? 'Atualizar produto' : 'Adicionar produto a encomenda';
+    return this.data.mode === 'edit' ? 'Atualizar produto' : 'Adicionar produto à encomenda';
   }
 
   onProductSelected(event: MatAutocompleteSelectedEvent): void {
@@ -199,6 +200,8 @@ export class OrderItemAddDialogComponent {
     if (!selectedProduct) {
       return;
     }
+
+    this.form.controls.productSearch.setErrors(null);
 
     const resolvedUnitPrice = this.resolveProductPrice(selectedProduct);
     const defaultApproxKg = Number(selectedProduct.defaultApproxKgPerUnit ?? 0);
@@ -236,6 +239,7 @@ export class OrderItemAddDialogComponent {
   }
 
   clearProductSelection(): void {
+    this.form.controls.productSearch.setErrors(null);
     this.form.patchValue({
       productSearch: '',
       productId: '',
@@ -251,6 +255,10 @@ export class OrderItemAddDialogComponent {
   }
 
   addItem(): void {
+    if (!this.form.controls.productId.value) {
+      this.form.controls.productSearch.setErrors({ required: true });
+    }
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -258,6 +266,13 @@ export class OrderItemAddDialogComponent {
 
     const value = this.form.getRawValue();
     const approxKgPerUnit = this.toApproxKg(value.approxWeightValue, value.approxWeightUnit);
+    const selectedMenuItem = this.data.menuItems.find((menuItem) => menuItem.id === value.establishmentMenuItemId);
+    const selectedAnimal = this.data.animalOptions.find((animal) => animal.id === value.animalId);
+    const selectedLot = this.data.lotOptions.find((lot) => lot.id === value.lotId);
+    const freeMenuItemName = this.hasMenuItems ? undefined : this.asOptional(value.establishmentMenuItemId);
+    const traceabilityOption = this.traceabilityOptions.find(
+      (option) => option.value === (value.traceabilitySourceType ?? 'NONE'),
+    );
 
     const baseItem = this.data.item;
     const item: OrderItem = {
@@ -266,6 +281,7 @@ export class OrderItemAddDialogComponent {
       productId: value.productId ?? undefined,
       productName: value.productName ?? '',
       establishmentMenuItemId: this.asOptional(value.establishmentMenuItemId),
+      establishmentMenuItemName: selectedMenuItem?.name ?? freeMenuItemName,
       requestedQuantity: Number(value.requestedQuantity ?? 0),
       requestedUnit: (value.requestedUnit ?? 'KG') as UnitType,
       approxKgPerUnit,
@@ -274,8 +290,11 @@ export class OrderItemAddDialogComponent {
       priceUnit: (value.priceUnit ?? 'KG') as UnitType,
       vatRate: Number(value.vatRate ?? 0),
       traceabilitySourceType: value.traceabilitySourceType ?? 'NONE',
+      traceabilitySourceLabel: traceabilityOption?.label,
       animalId: this.asOptional(value.animalId),
       lotId: this.asOptional(value.lotId),
+      animalIdentification: selectedAnimal?.identification,
+      lotCode: selectedLot?.label,
       status: baseItem?.status ?? 'PENDING',
     };
 
@@ -339,13 +358,8 @@ export class OrderItemAddDialogComponent {
       approxCtrl.setValidators([Validators.min(0.01)]);
     } else {
       quantityCtrl.setValidators([Validators.required, Validators.min(0.01)]);
-      if (priceUnit === 'KG') {
-        approxCtrl.clearValidators();
-        approxCtrl.setValue(null, { emitEvent: false });
-      } else {
-        approxCtrl.clearValidators();
-        approxCtrl.setValue(null, { emitEvent: false });
-      }
+      approxCtrl.clearValidators();
+      approxCtrl.setValue(null, { emitEvent: false });
     }
 
     quantityCtrl.updateValueAndValidity({ emitEvent: false });

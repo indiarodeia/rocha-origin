@@ -1,0 +1,14 @@
+{
+  "/api": {
+    "target": "https://rocha-origin-backend-aqt3.onrender.com",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/swagger": {
+    "target": "https://rocha-origin-backend-aqt3.onrender.com",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

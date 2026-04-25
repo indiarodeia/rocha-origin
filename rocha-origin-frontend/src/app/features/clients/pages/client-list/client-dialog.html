@@ -1,0 +1,88 @@
+<div mat-dialog-title class="dialog-title-wrap">
+  <h2 class="dialog-title">{{ title }}</h2>
+  <p class="dialog-subtitle">{{ subtitle }}</p>
+</div>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="dialog-form">
+    <div class="grid two-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Empresa</mat-label>
+        <input matInput formControlName="companyName">
+        <mat-error *ngIf="hasError('companyName', 'required')">Empresa obrigatoria.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>NIF</mat-label>
+        <input matInput formControlName="vatNumber">
+        <mat-error *ngIf="hasError('vatNumber', 'required')">NIF obrigatorio.</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="grid three-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Telefone</mat-label>
+        <input matInput formControlName="phone">
+        <mat-error *ngIf="hasError('phone', 'required')">Telefone obrigatorio.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email">
+        <mat-error *ngIf="hasError('email', 'required')">Email obrigatorio.</mat-error>
+        <mat-error *ngIf="hasError('email', 'email')">Email invalido.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Pagamento</mat-label>
+        <mat-select panelClass="app-dropdown-panel" formControlName="paymentTypeId">
+          <mat-option *ngFor="let paymentType of data.paymentTypes" [value]="paymentType.id">
+            {{ paymentType.label }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="hasError('paymentTypeId', 'required')">Pagamento obrigatorio.</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="grid two-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Rua</mat-label>
+        <input matInput formControlName="billingStreet">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Porta</mat-label>
+        <input matInput formControlName="billingDoorNumber">
+      </mat-form-field>
+    </div>
+
+    <div class="grid three-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Codigo postal</mat-label>
+        <input matInput formControlName="billingPostalCode">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Cidade</mat-label>
+        <input matInput formControlName="billingCity">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Pais</mat-label>
+        <input matInput formControlName="billingCountry">
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Notas</mat-label>
+      <textarea matInput rows="3" formControlName="notes"></textarea>
+    </mat-form-field>
+
+    <mat-slide-toggle formControlName="isActive">Cliente ativo</mat-slide-toggle>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button class="btn-cancel" mat-button type="button" (click)="close()">Cancelar</button>
+  <button class="btn-create" mat-raised-button type="button" (click)="submit()">{{ submitLabel }}</button>
+</mat-dialog-actions>

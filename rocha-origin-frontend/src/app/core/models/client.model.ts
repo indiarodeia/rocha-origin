@@ -7,6 +7,9 @@ export interface Client {
   vatNumber: string;
   phone: string;
   email?: string;
+  isActive?: boolean;
+
+  billingAddressId?: string;
 
   billingStreet?: string;
   billingDoorNumber?: string;
@@ -15,6 +18,8 @@ export interface Client {
   billingCountry?: string;
 
   defaultPaymentType?: PaymentType;
+  defaultPaymentTypeId?: number;
+  defaultPaymentTypeLabel?: string;
 
   notes?: string;
 

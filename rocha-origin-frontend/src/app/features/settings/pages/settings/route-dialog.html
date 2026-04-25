@@ -1,0 +1,30 @@
+<div mat-dialog-title class="dialog-title-wrap">
+  <h2 class="dialog-title">{{ title }}</h2>
+  <p class="dialog-subtitle">{{ subtitle }}</p>
+</div>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="dialog-form">
+    <div class="grid two-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="name" placeholder="Ex: Angra">
+        <mat-error *ngIf="hasError('name', 'required')">Nome obrigatorio.</mat-error>
+        <mat-error *ngIf="hasError('name', 'maxlength')">Maximo de 100 caracteres.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Ordem</mat-label>
+        <input matInput type="number" min="0" step="1" formControlName="sortOrder" placeholder="Ex: 1">
+        <mat-error *ngIf="hasError('sortOrder', 'min')">A ordem nao pode ser negativa.</mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-slide-toggle formControlName="isActive">Rota ativa</mat-slide-toggle>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button class="btn-cancel" mat-button type="button" (click)="close()">Cancelar</button>
+  <button class="btn-create" mat-raised-button type="button" (click)="submit()">{{ submitLabel }}</button>
+</mat-dialog-actions>

@@ -14,7 +14,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatColumnDef, MatTable, MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
@@ -41,8 +41,12 @@ export class ListPageComponent<T>
 
   @Input() pageSize = 25;
   @Input() showPaginator = true;
+  @Input() paginatorLength?: number;
+  @Input() paginatorPageIndex = 0;
+  @Input() useExternalPagination = false;
 
   @Output() add = new EventEmitter<void>();
+  @Output() page = new EventEmitter<PageEvent>();
 
   @ViewChild(MatTable) table?: MatTable<T>;
   @ViewChild(MatPaginator) paginator?: MatPaginator;
@@ -85,7 +89,7 @@ export class ListPageComponent<T>
   }
 
   private bindPaginator(): void {
-    if (!this.dataSource || !this.paginator || !this.showPaginator) {
+    if (!this.dataSource || !this.paginator || !this.showPaginator || this.useExternalPagination) {
       return;
     }
 

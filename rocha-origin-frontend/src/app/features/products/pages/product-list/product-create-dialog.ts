@@ -8,10 +8,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { Product } from '../../../../core/models/product.model';
+
+import { ProductUpsertInput } from '../../../../core/api/mappers/product.mapper';
+import { ProductCategory, ProductUnit } from '../../../../core/api/models';
 
 interface ProductCreateDialogData {
-  categories: string[];
+  categories: ProductCategory[];
+  units: ProductUnit[];
 }
 
 @Component({
@@ -36,13 +39,15 @@ export class ProductCreateDialogComponent {
 
   constructor(
     private readonly fb: FormBuilder,
-    private readonly dialogRef: MatDialogRef<ProductCreateDialogComponent, Omit<Product, 'id' | 'createdAt'>>,
+    private readonly dialogRef: MatDialogRef<ProductCreateDialogComponent, ProductUpsertInput>,
     @Inject(MAT_DIALOG_DATA) readonly data: ProductCreateDialogData,
   ) {
+    const defaultUnit = this.resolveDefaultUnit(data.units);
+
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       category: ['', [Validators.required, Validators.minLength(2)]],
-      defaultUnit: ['KG' as Product['defaultUnit'], Validators.required],
+      defaultUnit: [defaultUnit?.id ?? (null as number | null), Validators.required],
       defaultPrice: [0, [Validators.required, Validators.min(0)]],
       defaultVatRate: [6, [Validators.required, Validators.min(0), Validators.max(100)]],
       internalCode: [''],
@@ -52,7 +57,7 @@ export class ProductCreateDialogComponent {
     });
   }
 
-  get filteredCategories(): string[] {
+  get filteredCategories(): ProductCategory[] {
     const query = (this.form.controls.category.value ?? '').trim().toLowerCase();
     const all = this.data.categories ?? [];
 
@@ -60,13 +65,14 @@ export class ProductCreateDialogComponent {
       return all.slice(0, 10);
     }
 
-    return all
-      .filter((category) => category.toLowerCase().includes(query))
-      .slice(0, 10);
+    return all.filter((c) => c.label.toLowerCase().includes(query)).slice(0, 10);
   }
 
   get isUnitUn(): boolean {
-    return this.form.controls.defaultUnit.value === 'UN';
+    const selectedId = this.form.controls.defaultUnit.value;
+    const unit = this.data.units.find((u) => u.id === selectedId);
+    const label = (unit?.label ?? '').toUpperCase();
+    return label === 'UN' || label.startsWith('UNID');
   }
 
   hasError(controlName: keyof typeof this.form.controls, errorCode?: string): boolean {
@@ -98,17 +104,30 @@ export class ProductCreateDialogComponent {
     }
 
     const raw = this.form.getRawValue();
+    const categoryLabel = (raw.category ?? '').trim();
+    const found = this.data.categories.find(
+      (c) => c.label.toLowerCase() === categoryLabel.toLowerCase(),
+    );
+
+    if (!found) {
+      this.form.controls.category.setErrors({ notFound: true });
+      return;
+    }
+
     this.dialogRef.close({
       name: (raw.name ?? '').trim(),
-      category: (raw.category ?? '').trim(),
-      defaultUnit: raw.defaultUnit ?? 'KG',
-      defaultPrice: this.toOptionalNumber(raw.defaultPrice),
+      productCategoryId: found.id,
+      defaultUnitId: raw.defaultUnit!,
       defaultVatRate: this.toOptionalNumber(raw.defaultVatRate),
+      defaultSellPrice: this.toOptionalNumber(raw.defaultPrice),
       internalCode: this.toOptionalString(raw.internalCode),
-      defaultApproxKgPerUnit: this.toOptionalNumber(raw.defaultApproxKgPerUnit),
       description: this.toOptionalString(raw.description),
       isActive: !!raw.isActive,
     });
+  }
+
+  private resolveDefaultUnit(units: ProductUnit[]): ProductUnit | undefined {
+    return units.find((u) => u.label.toUpperCase() === 'KG') ?? units[0];
   }
 
   private toOptionalString(value: string | null | undefined): string | undefined {

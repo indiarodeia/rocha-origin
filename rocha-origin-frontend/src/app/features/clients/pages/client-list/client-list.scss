@@ -1,3 +1,34 @@
 :host {
   display: block;
 }
+
+.status-pill {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.status-active {
+  background: #dff6e7;
+  color: #11662e;
+}
+
+.status-inactive {
+  background: #ececec;
+  color: #3b3b3b;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+:host ::ng-deep .no-data-row .no-data-cell {
+  padding: 24px 16px;
+  text-align: center;
+  color: #64748b;
+  font-size: 14px;
+}

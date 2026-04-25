@@ -50,6 +50,12 @@
               "outputHashing": "all"
             },
             "development": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ],
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
@@ -64,7 +70,8 @@
               "buildTarget": "rocha-origin-frontend:build:production"
             },
             "development": {
-              "buildTarget": "rocha-origin-frontend:build:development"
+              "buildTarget": "rocha-origin-frontend:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

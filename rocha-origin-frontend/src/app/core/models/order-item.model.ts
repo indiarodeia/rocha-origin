@@ -13,9 +13,12 @@ export interface OrderItem {
   productName: string;
 
   establishmentMenuItemId?: string;
+  establishmentMenuItemName?: string;
 
   requestedQuantity: number;
   requestedUnit: UnitType;
+  requestedUnitId?: number;
+  requestedUnitLabel?: string;
 
   approxKgPerUnit?: number;
 
@@ -23,18 +26,28 @@ export interface OrderItem {
 
   unitPrice?: number;
   priceUnit?: UnitType;
+  priceUnitId?: number;
+  priceUnitLabel?: string;
   vatRate?: number;
 
   preparedQuantity?: number;
   preparedUnit?: UnitType;
+  preparedUnitId?: number;
+  preparedUnitLabel?: string;
   preparedWeightKg?: number;
 
   traceabilitySourceType?: TraceabilitySourceType;
+  traceabilitySourceTypeId?: number;
+  traceabilitySourceLabel?: string;
 
   animalId?: string;
   lotId?: string;
+  animalIdentification?: string;
+  lotCode?: string;
 
   status: OrderStatus;
+  apiOrderStatusId?: number;
+  statusLabel?: string;
 
   note?: string;
 

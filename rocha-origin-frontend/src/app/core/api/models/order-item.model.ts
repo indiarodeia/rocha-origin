@@ -1,0 +1,42 @@
+import { Animal } from './animal.model';
+import { EstablishmentMenuItem } from './establishment-menu-item.model';
+import { Lot } from './lot.model';
+import { Order } from './order.model';
+import { OrderStatus } from './order-status.model';
+import { Product } from './product.model';
+import { ProductUnit } from './product-unit.model';
+import { TraceabilitySourceType } from './traceability-source-type.model';
+
+export interface OrderItem {
+  id: string;
+  orderId: string;
+  order?: Order | null;
+  productId?: string | null;
+  product?: Product | null;
+  productName: string;
+  establishmentMenuItemId?: string | null;
+  establishmentMenuItem?: EstablishmentMenuItem | null;
+  requestedQuantity: number;
+  requestedUnitId: number;
+  requestedUnit?: ProductUnit | null;
+  approxKgPerUnit?: number | null;
+  requestNotes?: string | null;
+  unitPrice: number;
+  priceUnitId: number;
+  priceUnit?: ProductUnit | null;
+  preparedQuantity?: number | null;
+  preparedUnitId?: number | null;
+  preparedUnit?: ProductUnit | null;
+  preparedWeightKg?: number | null;
+  traceabilitySourceTypeId: number;
+  traceabilitySourceType?: TraceabilitySourceType | null;
+  animalId?: string | null;
+  animal?: Animal | null;
+  lotId?: string | null;
+  lot?: Lot | null;
+  orderStatusId: number;
+  status?: OrderStatus | null;
+  preparedAt?: string | null;
+  preparedByUserId?: string | null;
+  prepNotes?: string | null;
+}

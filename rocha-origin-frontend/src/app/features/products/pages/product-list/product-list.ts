@@ -1,16 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { afterNextRender, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
+
+import { ProductUpsertInput } from '../../../../core/api/mappers/product.mapper';
+import { ProductCategory, ProductUnit } from '../../../../core/api/models';
 import { Product } from '../../../../core/models/product.model';
-import {
-  ListFilterOption,
-  ListFiltersComponent,
-} from '../../../../shared/components/list-filters/list-filters.component';
 import { ListPageComponent } from '../../../../shared/components/list-page/list-page.component';
 import { MATERIAL_MODULES } from '../../../../shared/material/material.module';
+import { ProductsService } from '../../services/product.service';
 import { ProductCreateDialogComponent } from './product-create-dialog';
-import { ProductService } from '../../services/product.service';
 
 interface ProductListRow {
   id: string;
@@ -27,7 +28,7 @@ interface ProductListRow {
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, ListPageComponent, ListFiltersComponent, ...MATERIAL_MODULES],
+  imports: [CommonModule, ListPageComponent, ...MATERIAL_MODULES],
   templateUrl: './product-list.html',
   styleUrl: './product-list.scss',
 })
@@ -38,70 +39,73 @@ export class ProductList {
   sortColumn: 'name' | 'category' | 'defaultPrice' | 'status' = 'name';
   sortDirection: 'asc' | 'desc' = 'asc';
 
-  categoryOptions: string[] = [];
-  vatOptions: ListFilterOption[] = [];
+  pageIndex = 0;
+  readonly pageSize = 20;
+  totalCount = 0;
+  isLoading = true;
+  hasError = false;
+  isEmpty = false;
+  errorMessage = '';
+  emptyMessage = 'Não existem produtos para os filtros aplicados.';
+  listReady = false;
 
-  readonly displayedColumns = [
-    'name',
-    'category',
-    'defaultUnit',
-    'defaultPrice',
-    'vatRate',
-    'status',
-  ];
+  categories: ProductCategory[] = [];
+  units: ProductUnit[] = [];
 
-  private allRows: ProductListRow[] = [];
+  readonly displayedColumns = ['name', 'category', 'defaultUnit', 'defaultPrice', 'vatRate', 'status'];
 
   readonly dataSource = new MatTableDataSource<ProductListRow>([]);
 
   constructor(
     private readonly dialog: MatDialog,
-    private readonly productService: ProductService,
+    private readonly snackBar: MatSnackBar,
+    private readonly productsService: ProductsService,
   ) {
-    this.reloadRows();
-    this.refreshFilterOptions();
-    this.applyFilters();
+    afterNextRender(() => {
+      this.listReady = true;
+      this.loadRefData();
+      this.loadProducts();
+    });
   }
 
   onAddProduct(): void {
+    if (this.units.length === 0) {
+      this.snackBar.open(
+        'Não foi possível carregar as unidades de produto. Tente novamente.',
+        'Fechar',
+        { duration: 3200 },
+      );
+      return;
+    }
+
     const dialogRef = this.dialog.open(ProductCreateDialogComponent, {
       width: '860px',
       maxWidth: '96vw',
       autoFocus: false,
       data: {
-        categories: this.productService.getCategories(),
+        categories: this.categories,
+        units: this.units,
       },
     });
 
-    dialogRef.afterClosed().subscribe((payload) => {
+    dialogRef.afterClosed().subscribe((payload: ProductUpsertInput | undefined) => {
       if (!payload) {
         return;
       }
 
-      this.productService.create(payload);
-      this.reloadRows();
-      this.refreshFilterOptions();
-      this.applyFilters();
+      this.productsService.create(payload).subscribe({
+        next: () => {
+          this.snackBar.open('Produto criado com sucesso.', 'Fechar', { duration: 2800 });
+          this.pageIndex = 0;
+          this.loadProducts();
+        },
+        error: () => {
+          this.snackBar.open('Não foi possível criar o produto. Tente novamente.', 'Fechar', {
+            duration: 3200,
+          });
+        },
+      });
     });
-  }
-
-  setCategoryFilter(value: string | string[]): void {
-    const next = Array.isArray(value) ? value[0] : value;
-    this.categoryFilter = next || 'ALL';
-  }
-
-  setVatFilter(value: string | string[]): void {
-    const next = Array.isArray(value) ? value[0] : value;
-    this.vatFilter = next || 'ALL';
-  }
-
-  clearFilters(): void {
-    this.searchText = '';
-    this.categoryFilter = 'ALL';
-    this.vatFilter = 'ALL';
-    this.sortColumn = 'name';
-    this.sortDirection = 'asc';
-    this.applyFilters();
   }
 
   onHeaderSort(column: 'name' | 'category' | 'defaultPrice' | 'status'): void {
@@ -112,7 +116,8 @@ export class ProductList {
       this.sortDirection = 'asc';
     }
 
-    this.applyFilters();
+    this.pageIndex = 0;
+    this.loadProducts();
   }
 
   sortIcon(column: 'name' | 'category' | 'defaultPrice' | 'status'): string {
@@ -123,67 +128,74 @@ export class ProductList {
     return this.sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward';
   }
 
-  applyFilters(): void {
-    const query = this.searchText.trim().toLowerCase();
-
-    const filtered = this.allRows.filter((row) => {
-      const matchesSearch =
-        !query ||
-        row.name.toLowerCase().includes(query) ||
-        row.internalCode.toLowerCase().includes(query) ||
-        row.category.toLowerCase().includes(query);
-
-      const matchesCategory =
-        this.categoryFilter === 'ALL' || row.category === this.categoryFilter;
-
-      const matchesVat =
-        this.vatFilter === 'ALL' || row.vatRate === Number(this.vatFilter);
-
-      return matchesSearch && matchesCategory && matchesVat;
-    });
-
-    this.dataSource.data = this.applySort(filtered);
+  onPageChange(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.loadProducts();
   }
 
-  private applySort(rows: ProductListRow[]): ProductListRow[] {
-    const sorted = [...rows];
-
-    sorted.sort((a, b) => {
-      if (this.sortColumn === 'name') {
-        return a.name.localeCompare(b.name, 'pt');
-      }
-      if (this.sortColumn === 'category') {
-        return a.category.localeCompare(b.category, 'pt');
-      }
-      if (this.sortColumn === 'defaultPrice') {
-        return a.defaultPrice - b.defaultPrice;
-      }
-
-      return a.status.localeCompare(b.status, 'pt');
+  private loadRefData(): void {
+    this.productsService.getProductCategories().subscribe({
+      next: (cats) => {
+        this.categories = cats;
+      },
+      error: () => {
+        this.categories = [];
+      },
     });
 
-    if (this.sortDirection === 'desc') {
-      sorted.reverse();
+    this.productsService.getProductUnits().subscribe({
+      next: (units) => {
+        this.units = units;
+      },
+      error: () => {
+        this.units = [];
+      },
+    });
+  }
+
+  private loadProducts(): void {
+    this.isLoading = true;
+    this.hasError = false;
+    this.isEmpty = false;
+    this.errorMessage = '';
+    this.dataSource.data = [];
+
+    this.productsService
+      .search({
+        searchText: this.searchText,
+        categoryId: null,
+        sortBy: this.toSortBy(),
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize,
+      })
+      .subscribe({
+        next: ({ items, totalCount }) => {
+          this.isLoading = false;
+          this.totalCount = totalCount;
+          this.dataSource.data = items.map((p) => this.toRow(p));
+          this.isEmpty = this.dataSource.data.length === 0;
+        },
+        error: () => {
+          this.isLoading = false;
+          this.hasError = true;
+          this.isEmpty = false;
+          this.totalCount = 0;
+          this.dataSource.data = [];
+          this.errorMessage = 'Não foi possível carregar os produtos. Tente novamente.';
+        },
+      });
+  }
+
+  private toSortBy(): 'NAME_ASC' | 'NAME_DESC' | 'CREATED_DESC' | 'CREATED_ASC' {
+    if (this.sortColumn === 'name' || this.sortColumn === 'category') {
+      return this.sortDirection === 'asc' ? 'NAME_ASC' : 'NAME_DESC';
     }
 
-    return sorted;
+    return this.sortDirection === 'asc' ? 'CREATED_ASC' : 'CREATED_DESC';
   }
 
-  private refreshFilterOptions(): void {
-    this.categoryOptions = Array.from(
-      new Set(this.allRows.map((row) => row.category).filter((value) => value && value !== '-')),
-    ).sort((a, b) => a.localeCompare(b, 'pt'));
-
-    this.vatOptions = Array.from(new Set(this.allRows.map((row) => row.vatRate)))
-      .sort((a, b) => a - b)
-      .map((rate) => ({
-        value: String(rate),
-        label: `${rate}%`,
-      }));
-  }
-
-  private reloadRows(): void {
-    this.allRows = this.productService.getAll().map((product) => ({
+  private toRow(product: Product): ProductListRow {
+    return {
       id: product.id,
       name: product.name,
       internalCode: product.internalCode ?? '',
@@ -193,6 +205,6 @@ export class ProductList {
       vatRate: product.defaultVatRate ?? 0,
       status: product.isActive ? 'Ativo' : 'Inativo',
       createdAt: product.createdAt,
-    }));
+    };
   }
 }

@@ -1,16 +1,21 @@
 export interface Establishment {
   id: string;
   clientId: string;
+  clientName?: string;
 
   name: string;
   isActive: boolean;
 
+  deliveryAddressId?: string;
   deliveryStreet: string;
   deliveryDoorNumber?: string;
   deliveryPostalCode: string;
   deliveryCity: string;
+  deliveryCountry?: string;
 
   routeId?: string;
+  apiRouteId?: string;
+  routeName?: string;
 
   localContactPhone?: string;
 

@@ -1,21 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { afterNextRender, Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import {
-  MOCK_ESTABLISHMENTS,
-  MOCK_ORDER_ITEMS,
-  MOCK_ORDERS,
-  MOCK_ROUTES,
-} from '../../../../core/mocks/order.mock';
+
+import { Order } from '../../../../core/models/order.model';
 import { OrderStatus } from '../../../../core/models/types.model';
-import {
-  ListFilterOption,
-  ListFiltersComponent,
-} from '../../../../shared/components/list-filters/list-filters.component';
+import { OrdersService } from '../../../../core/services/orders.service';
 import { ListPageComponent } from '../../../../shared/components/list-page/list-page.component';
 import { MATERIAL_MODULES } from '../../../../shared/material/material.module';
+import { OrderDetailDialogComponent } from './order-detail-dialog';
 
 interface OrderListRow {
   id: string;
@@ -23,42 +18,36 @@ interface OrderListRow {
   routeId: string;
   routeName: string;
   status: OrderStatus;
-  deliveryDateTime: string;
-  isDelivery: boolean;
+  statusLabel: string;
+  deliveryDateTime?: string;
+  isDelivery?: boolean;
   isUrgent: boolean;
   products: string;
-  deliveryTimestamp: number;
 }
 
 @Component({
   selector: 'app-orders-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, ListPageComponent, ListFiltersComponent, ...MATERIAL_MODULES],
+  imports: [
+    CommonModule,
+    ListPageComponent,
+    MatDialogModule,
+    ...MATERIAL_MODULES,
+  ],
   templateUrl: './orders-list.html',
   styleUrl: './orders-list.scss',
 })
 export class OrdersList {
-  searchText = '';
-  selectedRouteIds: string[] = [];
-  selectedStatuses: OrderStatus[] = [];
-  typeFilter: 'ALL' | 'DELIVERY' | 'PICKUP' = 'ALL';
-  hideDelivered = false;
   deliverySortDirection: 'asc' | 'desc' = 'asc';
-
-  readonly routeFilterOptions: ListFilterOption[] = MOCK_ROUTES.map((route) => ({
-    value: route.id,
-    label: route.name,
-  }));
-  readonly statusFilterOptions: ListFilterOption[] = [
-    { value: 'PENDING', label: this.statusLabel('PENDING') },
-    { value: 'PREPARING', label: this.statusLabel('PREPARING') },
-    { value: 'READY', label: this.statusLabel('READY') },
-    { value: 'DELIVERED', label: this.statusLabel('DELIVERED') },
-  ];
-  readonly typeFilterOptions: ListFilterOption[] = [
-    { value: 'DELIVERY', label: 'Entrega' },
-    { value: 'PICKUP', label: 'Recolha' },
-  ];
+  pageIndex = 0;
+  readonly pageSize = 10;
+  totalCount = 0;
+  isLoading = true;
+  hasError = false;
+  isEmpty = false;
+  errorMessage = '';
+  emptyMessage = 'Não existem encomendas para os filtros aplicados.';
+  listReady = false;
 
   readonly displayedColumns = [
     'restaurant',
@@ -69,46 +58,21 @@ export class OrdersList {
     'flags',
   ];
 
-  private readonly allRows: OrderListRow[] =
-    MOCK_ORDERS.map((order) => {
-      const establishment = MOCK_ESTABLISHMENTS.find((item) => item.id === order.establishmentId);
-      const route = MOCK_ROUTES.find((item) => item.id === order.routeId);
-      const items = MOCK_ORDER_ITEMS.filter((item) => item.orderId === order.id);
-      const deliveryTimestamp = this.toTimestamp(order.deliveryDateTime ?? order.deliveryDate ?? '');
-
-      return {
-        id: order.id,
-        restaurant: order.quickClientName ?? establishment?.name ?? `Cliente ${order.clientId}`,
-        routeId: order.routeId ?? '-',
-        routeName: route?.name ?? order.routeId ?? '-',
-        status: order.status,
-        deliveryDateTime: order.deliveryDateTime ?? order.deliveryDate ?? '-',
-        isDelivery: !!order.isDelivery,
-        isUrgent: !!order.isUrgent,
-        products: items.map((item) => item.productName).join(', '),
-        deliveryTimestamp,
-      };
-    });
-
   readonly dataSource = new MatTableDataSource<OrderListRow>([]);
 
-  constructor(private readonly router: Router) {
-    this.applyFilters();
+  constructor(
+    private readonly router: Router,
+    private readonly ordersService: OrdersService,
+    private readonly dialog: MatDialog,
+  ) {
+    afterNextRender(() => {
+      this.listReady = true;
+      this.loadOrders();
+    });
   }
 
   trackById(_: number, row: OrderListRow): string {
     return row.id;
-  }
-
-  statusLabel(status: OrderStatus): string {
-    const labels: Record<OrderStatus, string> = {
-      PENDING: 'Pendente',
-      PREPARING: 'Em preparacao',
-      READY: 'Pronta',
-      DELIVERED: 'Entregue',
-    };
-
-    return labels[status];
   }
 
   statusClass(status: OrderStatus): string {
@@ -121,82 +85,125 @@ export class OrdersList {
 
   toggleDeliverySort(): void {
     this.deliverySortDirection = this.deliverySortDirection === 'asc' ? 'desc' : 'asc';
-    this.applyFilters();
+    this.loadOrders();
   }
 
   deliverySortIcon(): string {
     return this.deliverySortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward';
   }
 
-  clearFilters(): void {
-    this.searchText = '';
-    this.selectedRouteIds = [];
-    this.selectedStatuses = [];
-    this.typeFilter = 'ALL';
-    this.hideDelivered = false;
-    this.deliverySortDirection = 'asc';
-    this.applyFilters();
-  }
-
-  setSelectedRouteIds(value: string | string[]): void {
-    this.selectedRouteIds = Array.isArray(value) ? value : value ? [value] : [];
-  }
-
-  setSelectedStatuses(value: string | string[]): void {
-    const raw = Array.isArray(value) ? value : value ? [value] : [];
-    this.selectedStatuses = raw as OrderStatus[];
-  }
-
-  setTypeFilter(value: string | string[]): void {
-    const next = Array.isArray(value) ? value[0] : value;
-    this.typeFilter = (next as 'ALL' | 'DELIVERY' | 'PICKUP') || 'ALL';
-  }
-
-  applyFilters(): void {
-    const query = this.searchText.trim().toLowerCase();
-
-    const filtered = this.allRows.filter((row) => {
-      const matchesSearch =
-        !query ||
-        row.id.toLowerCase().includes(query) ||
-        row.restaurant.toLowerCase().includes(query) ||
-        row.products.toLowerCase().includes(query);
-
-      const matchesRoute =
-        this.selectedRouteIds.length === 0 || this.selectedRouteIds.includes(row.routeId);
-
-      const matchesStatus =
-        this.selectedStatuses.length === 0 || this.selectedStatuses.includes(row.status);
-
-      const matchesType =
-        this.typeFilter === 'ALL' ||
-        (this.typeFilter === 'DELIVERY' && row.isDelivery) ||
-        (this.typeFilter === 'PICKUP' && !row.isDelivery);
-      const matchesDelivered = !this.hideDelivered || row.status !== 'DELIVERED';
-
-      return (
-        matchesSearch &&
-        matchesRoute &&
-        matchesStatus &&
-        matchesType &&
-        matchesDelivered
-      );
-    });
-
-    filtered.sort((a, b) => {
-      const diff = a.deliveryTimestamp - b.deliveryTimestamp;
-      return this.deliverySortDirection === 'asc' ? diff : -diff;
-    });
-
-    this.dataSource.data = filtered;
-  }
-
-  private toTimestamp(value: string): number {
-    const parsed = new Date(value).getTime();
-    return Number.isNaN(parsed) ? 0 : parsed;
+  onPageChange(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.loadOrders();
   }
 
   onAddOrder(): void {
     this.router.navigate(['/nova-encomenda']);
+  }
+
+  openOrderDetail(row: OrderListRow): void {
+    this.dialog.open(OrderDetailDialogComponent, {
+      width: '1040px',
+      maxWidth: '96vw',
+      autoFocus: false,
+      data: {
+        orderId: row.id,
+      },
+    });
+  }
+
+  private loadOrders(): void {
+    this.isLoading = true;
+    this.hasError = false;
+    this.isEmpty = false;
+    this.errorMessage = '';
+    this.dataSource.data = [];
+
+    this.ordersService.search({
+      searchText: '',
+      statusIds: [],
+      routeIds: [],
+      deliveryTypeId: undefined,
+      hideDelivered: false,
+      sortDirection: this.deliverySortDirection,
+      pageIndex: this.pageIndex,
+      pageSize: this.pageSize,
+    }).subscribe({
+      next: ({ items, totalCount }) => {
+        try {
+          const safeItems = Array.isArray(items) ? items : [];
+          const safeTotalCount = typeof totalCount === 'number' && Number.isFinite(totalCount)
+            ? totalCount
+            : safeItems.length;
+
+          if (this.pageIndex > 0 && safeItems.length === 0 && safeTotalCount > 0) {
+            this.pageIndex = Math.max(0, Math.ceil(safeTotalCount / this.pageSize) - 1);
+            this.loadOrders();
+            return;
+          }
+
+          this.totalCount = safeTotalCount;
+          this.dataSource.data = safeItems.map((order) => this.toRow(order));
+          this.hasError = false;
+          this.isEmpty = safeItems.length === 0;
+        } catch {
+          this.totalCount = 0;
+          this.dataSource.data = [];
+          this.hasError = true;
+          this.isEmpty = false;
+          this.errorMessage = 'Não foi possível processar as encomendas recebidas.';
+        } finally {
+          this.isLoading = false;
+        }
+      },
+      error: () => {
+        this.isLoading = false;
+        this.hasError = true;
+        this.isEmpty = false;
+        this.totalCount = 0;
+        this.dataSource.data = [];
+        this.errorMessage = 'Não foi possível carregar as encomendas. Tente novamente.';
+      },
+    });
+  }
+
+  private toRow(order: Order): OrderListRow {
+    const restaurantName = typeof order.quickClientName === 'string' && order.quickClientName.trim().length > 0
+      ? order.quickClientName.trim()
+      : `Cliente ${order.clientId}`;
+
+    return {
+      id: order.id,
+      restaurant: restaurantName,
+      routeId: order.routeId ?? '-',
+      routeName: order.routeName ?? order.routeId ?? '-',
+      status: order.status,
+      statusLabel: order.statusLabel ?? this.fallbackStatusLabel(order.status),
+      deliveryDateTime: order.deliveryDateTime ?? order.deliveryDate ?? undefined,
+      isDelivery: order.isDelivery,
+      isUrgent: !!order.isUrgent,
+      products: this.buildProductsSummary(order),
+    };
+  }
+
+  private buildProductsSummary(order: Order): string {
+    const category = (order.orderCategory ?? '').trim();
+
+    if (category) {
+      return `Categoria: ${category}`;
+    }
+
+    return 'Sem detalhe de itens';
+  }
+
+  private fallbackStatusLabel(status: OrderStatus): string {
+    const labels: Record<OrderStatus, string> = {
+      PENDING: 'Pendente',
+      PREPARING: 'Em preparação',
+      READY: 'Pronta',
+      DELIVERED: 'Entregue',
+    };
+
+    return labels[status];
   }
 }

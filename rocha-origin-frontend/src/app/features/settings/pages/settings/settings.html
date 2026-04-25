@@ -1,1 +1,139 @@
-<h1>Configurações</h1>
+@if (listReady) {
+<div class="settings-stack">
+  <app-list-page
+    title="Rotas"
+    addLabel="Nova rota"
+    [dataSource]="routeDataSource"
+    [displayedColumns]="routeDisplayedColumns"
+    [pageSize]="10"
+    [showPaginator]="routeDataSource.data.length > 10"
+    (add)="openCreateRouteDialog()"
+  >
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Rota</th>
+      <td mat-cell *matCellDef="let row">
+        <span class="route-chip" [ngClass]="row.visualClass">{{ row.name }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sortOrder">
+      <th mat-header-cell *matHeaderCellDef>Ordem</th>
+      <td mat-cell *matCellDef="let row">{{ row.sortOrder ?? '-' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Estado</th>
+      <td mat-cell *matCellDef="let row">
+        <span class="status-pill" [ngClass]="row.statusClass">{{ row.statusLabel }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Ações</th>
+      <td mat-cell *matCellDef="let row" class="actions-cell">
+        <button mat-stroked-button type="button" (click)="openEditRouteDialog(row)" [disabled]="isRouteRowBusy(row)">
+          Editar
+        </button>
+        <button
+          mat-stroked-button
+          color="warn"
+          type="button"
+          (click)="inactivateRoute(row)"
+          [disabled]="!row.isActive || isRouteRowBusy(row)"
+        >
+          Inativar
+        </button>
+      </td>
+    </ng-container>
+
+    <tr class="no-data-row" mat-no-data-row>
+      <td class="no-data-cell" [attr.colspan]="routeDisplayedColumns.length">
+        @if (routeLoading) {
+          A carregar rotas...
+        } @else if (routeHasError) {
+          {{ routeErrorMessage }}
+        } @else if (routeIsEmpty) {
+          {{ routeEmptyMessage }}
+        }
+      </td>
+    </tr>
+  </app-list-page>
+
+  <app-list-page
+    title="Estabelecimentos"
+    addLabel="Novo estabelecimento"
+    [dataSource]="establishmentDataSource"
+    [displayedColumns]="establishmentDisplayedColumns"
+    [pageSize]="10"
+    [showPaginator]="establishmentDataSource.data.length > 10"
+    (add)="openCreateEstablishmentDialog()"
+  >
+    <ng-container matColumnDef="client">
+      <th mat-header-cell *matHeaderCellDef>Cliente</th>
+      <td mat-cell *matCellDef="let row">{{ row.clientName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Estabelecimento</th>
+      <td mat-cell class="text-bold-table" *matCellDef="let row">{{ row.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="city">
+      <th mat-header-cell *matHeaderCellDef>Cidade</th>
+      <td mat-cell *matCellDef="let row">{{ row.city }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="route">
+      <th mat-header-cell *matHeaderCellDef>Rota</th>
+      <td mat-cell *matCellDef="let row">{{ row.routeName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="phone">
+      <th mat-header-cell *matHeaderCellDef>Telefone local</th>
+      <td mat-cell *matCellDef="let row">{{ row.localContactPhone }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Estado</th>
+      <td mat-cell *matCellDef="let row">
+        <span class="status-pill" [ngClass]="row.statusClass">{{ row.statusLabel }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Ações</th>
+      <td mat-cell *matCellDef="let row" class="actions-cell">
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="openEditEstablishmentDialog(row)"
+          [disabled]="isEstablishmentRowBusy(row)"
+        >
+          Editar
+        </button>
+        <button
+          mat-stroked-button
+          color="warn"
+          type="button"
+          (click)="inactivateEstablishment(row)"
+          [disabled]="!row.isActive || isEstablishmentRowBusy(row)"
+        >
+          Inativar
+        </button>
+      </td>
+    </ng-container>
+
+    <tr class="no-data-row" mat-no-data-row>
+      <td class="no-data-cell" [attr.colspan]="establishmentDisplayedColumns.length">
+        @if (establishmentLoading) {
+          A carregar estabelecimentos...
+        } @else if (establishmentHasError) {
+          {{ establishmentErrorMessage }}
+        } @else if (establishmentIsEmpty) {
+          {{ establishmentEmptyMessage }}
+        }
+      </td>
+    </tr>
+  </app-list-page>
+</div>
+}

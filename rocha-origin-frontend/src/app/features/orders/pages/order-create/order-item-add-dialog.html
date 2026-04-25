@@ -15,7 +15,7 @@
           {{ product.name }} - {{ product.category }}
         </mat-option>
       </mat-autocomplete>
-      <mat-error *ngIf="hasError('productId', 'required')">
+      <mat-error *ngIf="hasError('productSearch', 'required')">
         Seleciona um produto da lista.
       </mat-error>
     </mat-form-field>
@@ -42,8 +42,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Tipo de unidade</mat-label>
         <mat-select panelClass="app-dropdown-panel" formControlName="requestedUnit">
-          <mat-option value="KG">KG</mat-option>
-          <mat-option value="UN">UN</mat-option>
+          <mat-option *ngFor="let unit of unitOptions" [value]="unit">{{ unit }}</mat-option>
         </mat-select>
       </mat-form-field>
 

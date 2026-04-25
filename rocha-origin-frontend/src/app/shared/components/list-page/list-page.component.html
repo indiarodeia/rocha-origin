@@ -26,7 +26,13 @@
 
     </div>
 
-    <mat-paginator *ngIf="showPaginator" [pageSize]="pageSize">
+    <mat-paginator
+      *ngIf="showPaginator"
+      [pageSize]="pageSize"
+      [length]="paginatorLength ?? dataSource.data.length"
+      [pageIndex]="paginatorPageIndex"
+      (page)="page.emit($event)"
+    >
     </mat-paginator>
 
 </div>

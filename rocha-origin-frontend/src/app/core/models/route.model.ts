@@ -3,6 +3,7 @@ import { Order } from './order.model';
 
 export interface Route {
   id: string;
+  apiId?: string;
   name: string;
   sortOrder?: number;
   isActive: boolean;

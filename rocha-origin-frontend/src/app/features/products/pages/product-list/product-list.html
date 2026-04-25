@@ -1,22 +1,17 @@
-<app-list-page title="Produtos" addLabel="Novo produto" [dataSource]="dataSource" [displayedColumns]="displayedColumns"
-  [pageSize]="10" (add)="onAddProduct()">
-  <app-list-filters
-    filters
-    [searchText]="searchText"
-    (searchTextChange)="searchText = $event"
-    searchPlaceholder="Nome, código interno ou categoria"
-    cityLabel="Categoria"
-    [cityOptions]="categoryOptions"
-    [cityValue]="categoryFilter"
-    (cityValueChange)="setCategoryFilter($event)"
-    paymentLabel="IVA"
-    [paymentOptions]="vatOptions"
-    [paymentValue]="vatFilter"
-    (paymentValueChange)="setVatFilter($event)"
-    (changed)="applyFilters()"
-    (clear)="clearFilters()"
-  ></app-list-filters>
-
+@if (listReady) {
+  <app-list-page
+    title="Produtos"
+    addLabel="Novo produto"
+    [dataSource]="dataSource"
+    [displayedColumns]="displayedColumns"
+    [pageSize]="pageSize"
+    [showPaginator]="totalCount > pageSize"
+    [paginatorLength]="totalCount"
+    [paginatorPageIndex]="pageIndex"
+    [useExternalPagination]="true"
+    (add)="onAddProduct()"
+    (page)="onPageChange($event)"
+  >
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>
       <button class="sort-header-btn" mat-button type="button" (click)="onHeaderSort('name')">
@@ -45,7 +40,7 @@
   <ng-container matColumnDef="defaultPrice">
     <th mat-header-cell *matHeaderCellDef>
       <button class="sort-header-btn" mat-button type="button" (click)="onHeaderSort('defaultPrice')">
-        Preco Base
+        Preço Base
         <mat-icon>{{ sortIcon('defaultPrice') }}</mat-icon>
       </button>
     </th>
@@ -70,4 +65,17 @@
       </span>
     </td>
   </ng-container>
-</app-list-page>
+
+    <tr class="no-data-row" mat-no-data-row>
+      <td class="no-data-cell" [attr.colspan]="displayedColumns.length">
+        @if (isLoading) {
+          A carregar produtos...
+        } @else if (hasError) {
+          {{ errorMessage }}
+        } @else if (isEmpty) {
+          {{ emptyMessage }}
+        }
+      </td>
+    </tr>
+  </app-list-page>
+}

@@ -17,21 +17,22 @@
         <input matInput formControlName="category" [matAutocomplete]="categoryAuto"
           placeholder="Ex: Preparados de Carne">
         <mat-autocomplete #categoryAuto="matAutocomplete" (optionSelected)="onCategorySelected($event)">
-          <mat-option *ngFor="let category of filteredCategories" [value]="category">
-            {{ category }}
+          <mat-option *ngFor="let category of filteredCategories" [value]="category.label">
+            {{ category.label }}
           </mat-option>
         </mat-autocomplete>
-        <mat-error *ngIf="hasError('category', 'required')">Categoria obrigatoria.</mat-error>
+        <mat-error *ngIf="hasError('category', 'required')">Categoria obrigatória.</mat-error>
+        <mat-error *ngIf="hasError('category', 'notFound')">Selecione uma categoria da lista.</mat-error>
       </mat-form-field>
-    </div>n
+    </div>
 
     <div class="grid three-cols">
       <mat-form-field appearance="outline">
         <mat-label>Unidade base</mat-label>
         <mat-select panelClass="app-dropdown-panel" formControlName="defaultUnit">
-          <mat-option value="KG">KG</mat-option>
-          <mat-option value="UN">UN</mat-option>
+          <mat-option *ngFor="let unit of data.units" [value]="unit.id">{{ unit.label }}</mat-option>
         </mat-select>
+        <mat-error *ngIf="hasError('defaultUnit', 'required')">Selecione a unidade base.</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">

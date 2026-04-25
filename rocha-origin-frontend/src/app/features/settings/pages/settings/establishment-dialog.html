@@ -1,0 +1,79 @@
+<div mat-dialog-title class="dialog-title-wrap">
+  <h2 class="dialog-title">{{ title }}</h2>
+  <p class="dialog-subtitle">{{ subtitle }}</p>
+</div>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="dialog-form">
+    <div class="grid two-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Cliente</mat-label>
+        <mat-select panelClass="app-dropdown-panel" formControlName="clientId">
+          <mat-option *ngFor="let client of data.clients" [value]="client.id">
+            {{ client.companyName }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="hasError('clientId', 'required')">Cliente obrigatorio.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="name">
+        <mat-error *ngIf="hasError('name', 'required')">Nome obrigatorio.</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="grid two-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Rua</mat-label>
+        <input matInput formControlName="deliveryStreet">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Porta</mat-label>
+        <input matInput formControlName="deliveryDoorNumber">
+      </mat-form-field>
+    </div>
+
+    <div class="grid three-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Codigo postal</mat-label>
+        <input matInput formControlName="deliveryPostalCode">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Cidade</mat-label>
+        <input matInput formControlName="deliveryCity">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Pais</mat-label>
+        <input matInput formControlName="deliveryCountry">
+      </mat-form-field>
+    </div>
+
+    <div class="grid two-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Rota</mat-label>
+        <mat-select panelClass="app-dropdown-panel" formControlName="routeId">
+          <mat-option value="">Sem rota</mat-option>
+          <mat-option *ngFor="let route of data.routes" [value]="route.apiId ?? ''">
+            {{ route.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Telefone local</mat-label>
+        <input matInput formControlName="localContactPhone">
+      </mat-form-field>
+    </div>
+
+    <mat-slide-toggle formControlName="isActive">Estabelecimento ativo</mat-slide-toggle>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button class="btn-cancel" mat-button type="button" (click)="close()">Cancelar</button>
+  <button class="btn-create" mat-raised-button type="button" (click)="submit()">{{ submitLabel }}</button>
+</mat-dialog-actions>

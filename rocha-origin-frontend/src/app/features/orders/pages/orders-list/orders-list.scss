@@ -2,13 +2,22 @@
   display: block;
 }
 
-.filter-checkbox {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: #334155;
-  white-space: nowrap;
+.restaurant-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.restaurant-name {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.detail-link {
+  min-width: 0;
+  padding: 0;
+  line-height: 1.2;
 }
 
 .products-cell {
@@ -121,4 +130,11 @@
 .flag-urgent {
   background: #ffe7e7;
   color: #8f1919;
+}
+
+:host ::ng-deep .no-data-row .no-data-cell {
+  padding: 24px 16px;
+  text-align: center;
+  color: #64748b;
+  font-size: 14px;
 }

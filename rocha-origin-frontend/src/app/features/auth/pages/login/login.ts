@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NgIf, MatButtonModule],
+  imports: [MatButtonModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })

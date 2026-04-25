@@ -1,0 +1,91 @@
+<h2 mat-dialog-title>Detalhe da encomenda</h2>
+
+<mat-dialog-content class="dialog-content">
+  <div class="order-meta" *ngIf="order as currentOrder">
+    <div class="meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">Cliente</span>
+        <strong>{{ currentOrder.quickClientName || ('Cliente ' + currentOrder.clientId) }}</strong>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Estado</span>
+        <span class="status-pill" [ngClass]="statusClass(currentOrder.status)">
+          {{ currentOrder.statusLabel ?? currentOrder.status }}
+        </span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Rota</span>
+        <strong>{{ currentOrder.routeName ?? '-' }}</strong>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Entrega</span>
+        <strong>{{ currentOrder.deliveryDateTime ? (currentOrder.deliveryDateTime | date: 'dd/MM/yyyy HH:mm') : '-' }}</strong>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Tipo</span>
+        <strong>{{ currentOrder.deliveryTypeLabel ?? '-' }}</strong>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Pagamento</span>
+        <strong>{{ currentOrder.paymentTypeLabel ?? '-' }}</strong>
+      </div>
+    </div>
+
+    <div class="notes-box" *ngIf="currentOrder.notes">
+      <span class="meta-label">Observações</span>
+      <p>{{ currentOrder.notes }}</p>
+    </div>
+  </div>
+
+  <div class="items-table-wrap">
+    <table mat-table [dataSource]="dataSource" class="items-table">
+      <ng-container matColumnDef="productName">
+        <th mat-header-cell *matHeaderCellDef>Produto</th>
+        <td mat-cell *matCellDef="let row">{{ row.productName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="requested">
+        <th mat-header-cell *matHeaderCellDef>Pedido</th>
+        <td mat-cell *matCellDef="let row">{{ row.requestedSummary }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="prepared">
+        <th mat-header-cell *matHeaderCellDef>Preparado</th>
+        <td mat-cell *matCellDef="let row">{{ row.preparedSummary }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="status-pill" [ngClass]="statusClass(row.status)">
+            {{ row.statusLabel }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="traceability">
+        <th mat-header-cell *matHeaderCellDef>Rastreabilidade</th>
+        <td mat-cell *matCellDef="let row">{{ row.traceabilitySummary }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="notes">
+        <th mat-header-cell *matHeaderCellDef>Notas</th>
+        <td mat-cell *matCellDef="let row">{{ row.notesSummary }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr class="no-data-row" mat-no-data-row>
+        <td class="no-data-cell" [attr.colspan]="displayedColumns.length">
+          <ng-container *ngIf="isLoading">A carregar detalhe da encomenda...</ng-container>
+          <ng-container *ngIf="!isLoading && hasError">{{ errorMessage }}</ng-container>
+          <ng-container *ngIf="!isLoading && !hasError && isEmpty">{{ emptyMessage }}</ng-container>
+        </td>
+      </tr>
+    </table>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close type="button">Fechar</button>
+</mat-dialog-actions>

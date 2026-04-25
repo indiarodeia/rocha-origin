@@ -1,0 +1,88 @@
+:host {
+  display: block;
+}
+
+.dialog-content {
+  min-width: min(960px, 92vw);
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.meta-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+}
+
+.notes-box {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.notes-box p {
+  margin: 6px 0 0;
+  color: #334155;
+}
+
+.items-table-wrap {
+  overflow-x: auto;
+}
+
+.items-table {
+  width: 100%;
+}
+
+.items-table .mat-mdc-cell,
+.items-table .mat-mdc-header-cell {
+  vertical-align: top;
+}
+
+.status-pill {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.status-pending {
+  background: #fff6cc;
+  color: #8a6d00;
+}
+
+.status-preparing {
+  background: #dff1ff;
+  color: #005a9c;
+}
+
+.status-ready {
+  background: #dff6e7;
+  color: #11662e;
+}
+
+.status-delivered {
+  background: #ececec;
+  color: #3b3b3b;
+}
+
+.no-data-cell {
+  padding: 24px 16px;
+  text-align: center;
+  color: #64748b;
+  font-size: 14px;
+}
