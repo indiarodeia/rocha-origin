@@ -5,6 +5,7 @@ import {
   mapApiOrderToUiOrder,
   mapOrderCreateInputToSaveOrderRequest,
   OrderCreateInput,
+  sanitizeSaveOrderRequest,
 } from '../api/mappers/order.mapper';
 import {
   DeliveryType,
@@ -83,8 +84,12 @@ export class OrdersService {
   }
 
   create(payload: OrderCreateInput): Observable<Order> {
+    const sanitizedPayload = sanitizeSaveOrderRequest(
+      mapOrderCreateInputToSaveOrderRequest(payload),
+    );
+
     return this.orderApiService
-      .create(mapOrderCreateInputToSaveOrderRequest(payload))
+      .create(sanitizedPayload)
       .pipe(map(mapApiOrderToUiOrder));
   }
 

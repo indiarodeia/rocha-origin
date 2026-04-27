@@ -27,6 +27,10 @@ import {
   mapApiTraceabilityLabelToOption,
   OrderItemTraceabilityOption,
 } from '../../../../core/api/mappers/order-item-source.mapper';
+import {
+  mapOrderCreateInputToSaveOrderRequest,
+  OrderCreateInput,
+} from '../../../../core/api/mappers/order.mapper';
 import { buildRouteVisualClass } from '../../../../core/api/mappers/route.mapper';
 import { Client } from '../../../../core/models/client.model';
 import { Establishment } from '../../../../core/models/establishment.model';
@@ -40,6 +44,7 @@ import { OrderItemsService } from '../../../../core/services/order-items.service
 import { OrderItemSourcesService } from '../../../../core/services/order-item-sources.service';
 import { OrdersService } from '../../../../core/services/orders.service';
 import { RoutesService } from '../../../../core/services/routes.service';
+import { environment } from '../../../../../environments/environment';
 import { OrderItemAddDialogComponent } from './order-item-add-dialog';
 
 interface ClientOption {
@@ -237,7 +242,7 @@ export class OrderCreate implements OnInit {
     this.lastCreatedOrder = undefined;
     this.isSubmitting = true;
 
-    this.ordersService.create({
+    const orderCreateInput: OrderCreateInput = {
       clientId: value.clientId ?? '',
       establishmentId: this.asNullable(value.establishmentId),
       quickClientName: this.asNullable(value.quickClientName),
@@ -250,7 +255,16 @@ export class OrderCreate implements OnInit {
       paymentTypeId: selectedPaymentTypeId,
       notes: this.asNullable(value.notes),
       createdByUserId: this.loggedUserId,
-    }).subscribe({
+    };
+
+    if (!environment.production) {
+      console.debug(
+        'POST /api/Orders payload',
+        mapOrderCreateInputToSaveOrderRequest(orderCreateInput),
+      );
+    }
+
+    this.ordersService.create(orderCreateInput).subscribe({
       next: (createdOrder) => {
         this.lastCreatedOrder = createdOrder;
 

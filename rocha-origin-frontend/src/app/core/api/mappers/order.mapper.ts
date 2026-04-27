@@ -3,7 +3,25 @@ import { OrderStatus as UiOrderStatus, PaymentType as UiPaymentType } from '../.
 import { Order as ApiOrder } from '../models';
 import { buildRouteUiId } from './route.mapper';
 
-export type SaveOrderRequest = Omit<ApiOrder, 'id'> & { id?: string };
+export interface SaveOrderRequest {
+  clientId: string;
+  establishmentId?: string | null;
+  quickClientName?: string | null;
+  orderStatusId: number;
+  prepDate?: string | null;
+  deliveryDate?: string | null;
+  deliveryDeadlineTime?: string | null;
+  deliveryTypeId: number;
+  isUrgent: boolean;
+  orderCategory?: string | null;
+  routeId?: string | null;
+  paymentTypeId: number;
+  notes?: string | null;
+  createdByUserId?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  isActive: boolean;
+}
 
 export interface OrderCreateInput {
   clientId: string;
@@ -64,7 +82,7 @@ export function mapApiOrderToUiOrder(apiOrder: ApiOrder): UiOrder {
 export function mapOrderCreateInputToSaveOrderRequest(input: OrderCreateInput): SaveOrderRequest {
   const now = new Date().toISOString();
 
-  return {
+  return sanitizeSaveOrderRequest({
     clientId: input.clientId,
     establishmentId: input.establishmentId ?? null,
     quickClientName: toNullableString(input.quickClientName),
@@ -82,6 +100,28 @@ export function mapOrderCreateInputToSaveOrderRequest(input: OrderCreateInput): 
     createdAt: now,
     updatedAt: now,
     isActive: true,
+  });
+}
+
+export function sanitizeSaveOrderRequest(payload: SaveOrderRequest): SaveOrderRequest {
+  return {
+    clientId: payload.clientId,
+    establishmentId: toNullableUuid(payload.establishmentId),
+    quickClientName: toNullableString(payload.quickClientName),
+    orderStatusId: payload.orderStatusId,
+    prepDate: toNullableString(payload.prepDate),
+    deliveryDate: toNullableString(payload.deliveryDate),
+    deliveryDeadlineTime: toNullableString(payload.deliveryDeadlineTime),
+    deliveryTypeId: payload.deliveryTypeId,
+    isUrgent: !!payload.isUrgent,
+    orderCategory: toNullableString(payload.orderCategory),
+    routeId: toNullableUuid(payload.routeId),
+    paymentTypeId: payload.paymentTypeId,
+    notes: toNullableString(payload.notes),
+    createdByUserId: toNullableUuid(payload.createdByUserId),
+    createdAt: payload.createdAt,
+    updatedAt: payload.updatedAt,
+    isActive: !!payload.isActive,
   };
 }
 
